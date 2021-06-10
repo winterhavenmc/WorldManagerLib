@@ -3,7 +3,7 @@
 
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>world-manager-lib</artifactId>
-	<version>1.16.0</version>
+	<version>1.16.1</version>
 	<name>WorldManagerLib</name>
 
 	<properties>
@@ -111,7 +111,7 @@
 		<defaultGoal>clean package</defaultGoal>
 
 		<!-- The name of the final jar -->
-		<finalName>${project.name} v${project.version}</finalName>
+		<finalName>${project.name}-${project.version}</finalName>
 
 		<plugins>
 			<!-- Create Java jar -->
