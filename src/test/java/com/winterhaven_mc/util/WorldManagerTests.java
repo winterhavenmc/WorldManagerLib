@@ -33,53 +33,61 @@ public class WorldManagerTests {
     }
 
 
-    @Test
-    @DisplayName("Test mock server is not null.")
-    void MockServerNotNull() {
-        Assertions.assertNotNull(server);
+    @Nested
+    class MockSetup {
+        @Test
+        @DisplayName("Test mock server is not null.")
+        void MockServerNotNull() {
+            Assertions.assertNotNull(server);
+        }
+
+        @Test
+        @DisplayName("Test mock plugin is not null.")
+        void MockPluginNotNull() {
+            Assertions.assertNotNull(plugin);
+        }
     }
 
-    @Test
-    @DisplayName("Test mock plugin is not null.")
-    void MockPluginNotNull() {
-        Assertions.assertNotNull(plugin);
+    @Nested
+    class WorldManagerSetup {
+        @Test
+        @DisplayName("Test worldmanager is not null.")
+        void worldManagerNotNull() {
+            Assertions.assertNotNull(plugin.worldManager);
+        }
+
+        @Test
+        @DisplayName("Test plugin.worldmanager.getEnabledWorldNames() is not null.")
+        void getEnabledWorldNamesNotNull() {
+            Assertions.assertNotNull(plugin.worldManager.getEnabledWorldNames());
+        }
+
+        @Test
+        @DisplayName("test world name 'world' is in enabled worlds list.")
+        void getEnabledWorldNamesContains() {
+            Collection<String> names = plugin.worldManager.getEnabledWorldNames();
+            Assertions.assertTrue(names.contains("world"));
+        }
     }
 
-    @Test
-    @DisplayName("Test worldmanager is not null.")
-    void worldManagerNotNull() {
-        Assertions.assertNotNull(plugin.worldManager);
-    }
+    @Nested
+    class WorldManagerGetWorld {
+        @Test
+        @DisplayName("Test get world name from world manager.")
+        void getWorldNameByString() {
+            Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock.getName()));
+        }
 
-    @Test
-    @DisplayName("Test plugin.worldmanager.getEnabledWorldNames() is not null.")
-    void getEnabledWorldNamesNotNull() {
-        Assertions.assertNotNull(plugin.worldManager.getEnabledWorldNames());
-    }
+        @Test
+        @DisplayName("Test get world name by world object.")
+        void getWorldNameByWorld() {
+            Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock));
+        }
 
-    @Test
-    @DisplayName("test world name 'world' is in enabled worlds list.")
-    void getEnabledWorldNamesContains() {
-        Collection<String> names = plugin.worldManager.getEnabledWorldNames();
-        Assertions.assertTrue(names.contains("world"));
+        @Test
+        @DisplayName("Test get world name by world uuid.")
+        void getWorldNameByWorldUid() {
+            Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock.getUID()));
+        }
     }
-
-    @Test
-    @DisplayName("Test get world name from world manager.")
-    void getWorldNameByString() {
-        Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock.getName()));
-    }
-
-    @Test
-    @DisplayName("Test get world name by world object.")
-    void getWorldNameByWorld() {
-        Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock));
-    }
-
-    @Test
-    @DisplayName("Test get world name by world uuid.")
-    void getWorldNameByWorldUid() {
-        Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock.getUID()));
-    }
-
 }
