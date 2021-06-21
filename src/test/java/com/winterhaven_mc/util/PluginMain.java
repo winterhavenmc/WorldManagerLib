@@ -12,23 +12,23 @@ import java.io.File;
 @SuppressWarnings("unused")
 public final class PluginMain extends JavaPlugin {
 
-    public WorldManager worldManager;
+	public WorldManager worldManager;
 
 
-    public PluginMain() {
-        super();
-    }
+	public PluginMain() {
+		super();
+	}
 
 
-    protected PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
-        super(loader, descriptionFile, dataFolder, file);
-    }
+	protected PluginMain(JavaPluginLoader loader, PluginDescriptionFile descriptionFile, File dataFolder, File file) {
+		super(loader, descriptionFile, dataFolder, file);
+	}
 
 
-    @Override
-    public void onEnable() {
-        // instantiate world manager
-        worldManager = new WorldManager(this);
-    }
+	@Override
+	public void onEnable() {
+		// instantiate world manager
+		worldManager = new WorldManager(this);
+	}
 
 }
