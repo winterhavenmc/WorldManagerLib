@@ -10,6 +10,7 @@ import java.util.Collection;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class WorldManagerTests {
 
+	@SuppressWarnings("FieldCanBeLocal")
 	private ServerMock server;
 	private PluginMain plugin;
 	private WorldMock worldMock;
@@ -32,21 +33,6 @@ public class WorldManagerTests {
 		MockBukkit.unmock();
 	}
 
-
-	@Nested
-	class MockSetup {
-		@Test
-		@DisplayName("Test mock server is not null.")
-		void MockServerNotNull() {
-			Assertions.assertNotNull(server);
-		}
-
-		@Test
-		@DisplayName("Test mock plugin is not null.")
-		void MockPluginNotNull() {
-			Assertions.assertNotNull(plugin);
-		}
-	}
 
 	@Nested
 	class WorldManagerSetup {
