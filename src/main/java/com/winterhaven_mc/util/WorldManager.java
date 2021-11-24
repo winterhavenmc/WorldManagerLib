@@ -53,7 +53,7 @@ public final class WorldManager {
 	 * update enabledWorlds ArrayList field from plugin config.yml file
 	 */
 	@SuppressWarnings("WeakerAccess")
-	public final void reload() {
+	public void reload() {
 
 		// clear enabledWorldUIDs field
 		this.enabledWorldUIDs.clear();
@@ -104,7 +104,7 @@ public final class WorldManager {
 	 *
 	 * @return an ArrayList of String containing enabled world names
 	 */
-	public final List<String> getEnabledWorldNames() {
+	public List<String> getEnabledWorldNames() {
 
 		// create empty list of string for return
 		List<String> resultList = new ArrayList<>();
@@ -132,7 +132,7 @@ public final class WorldManager {
 	 * @param worldUID Unique Identifier for world
 	 * @return {@code true} if world is enabled, {@code false} if disabled
 	 */
-	public final boolean isEnabled(final UUID worldUID) {
+	public boolean isEnabled(final UUID worldUID) {
 
 		// if worldUID is null return false
 		if (worldUID == null) {
@@ -149,7 +149,7 @@ public final class WorldManager {
 	 * @param world bukkit world object
 	 * @return {@code true} if world is enabled, {@code false} if disabled
 	 */
-	public final boolean isEnabled(final World world) {
+	public boolean isEnabled(final World world) {
 
 		// if world is null return false
 		if (world == null) {
@@ -166,7 +166,7 @@ public final class WorldManager {
 	 * @param worldName name of world as string to check
 	 * @return {@code true} if world is enabled, {@code false} if disabled
 	 */
-	public final boolean isEnabled(final String worldName) {
+	public boolean isEnabled(final String worldName) {
 
 		// if worldName is null or empty, return false
 		if (worldName == null || worldName.isEmpty()) {
@@ -193,7 +193,7 @@ public final class WorldManager {
 	 * @return String containing Multiverse world alias or bukkit world name
 	 * @throws NullPointerException if passed worldUID is null
 	 */
-	public final String getWorldName(final UUID worldUID) {
+	public String getWorldName(final UUID worldUID) {
 
 		// worldUID must be non-null
 		Objects.requireNonNull(worldUID);
@@ -232,7 +232,7 @@ public final class WorldManager {
 	 * @return bukkit world name or multiverse alias as String
 	 * @throws NullPointerException if passed world is null
 	 */
-	public final String getWorldName(final World world) {
+	public String getWorldName(final World world) {
 
 		// world must be non-null
 		Objects.requireNonNull(world);
@@ -262,7 +262,7 @@ public final class WorldManager {
 	 * @param passedName the bukkit world name as string
 	 * @return bukkit world name or multiverse alias as String
 	 */
-	public final String getWorldName(final String passedName) {
+	public String getWorldName(final String passedName) {
 
 		// if passedName is null or empty, return empty string
 		if (passedName == null || passedName.isEmpty()) {
@@ -304,7 +304,7 @@ public final class WorldManager {
 	 * @return bukkit world name or multiverse alias as String
 	 * @throws NullPointerException if passed sender is null
 	 */
-	public final String getWorldName(final CommandSender sender) {
+	public String getWorldName(final CommandSender sender) {
 
 		// sender must be non-null
 		Objects.requireNonNull(sender);
@@ -341,7 +341,7 @@ public final class WorldManager {
 	 * @return bukkit world name or multiverse alias as String
 	 * @throws NullPointerException if passed location is null
 	 */
-	public final String getWorldName(final Location location) {
+	public String getWorldName(final Location location) {
 
 		// passed location must be non-null
 		Objects.requireNonNull(location);
@@ -383,7 +383,7 @@ public final class WorldManager {
 	 * @return spawn location
 	 * @throws NullPointerException if passed world is null
 	 */
-	public final Location getSpawnLocation(final World world) {
+	public Location getSpawnLocation(final World world) {
 
 		// passed world must be non-null
 		Objects.requireNonNull(world);
@@ -405,7 +405,7 @@ public final class WorldManager {
 	 * @return world spawn location
 	 * @throws NullPointerException if passed entity is null
 	 */
-	public final Location getSpawnLocation(final Entity entity) {
+	public Location getSpawnLocation(final Entity entity) {
 
 		// passed entity must be non-null
 		Objects.requireNonNull(entity);
