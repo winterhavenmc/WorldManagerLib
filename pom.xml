@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>world-manager-lib</artifactId>
-	<version>1.16.1</version>
+	<version>1.16.3</version>
 	<name>WorldManagerLib</name>
 
 	<url>https://github.com/tim-savage/WorldManagerLib</url>
@@ -58,7 +58,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.4-R0.1-SNAPSHOT</version>
+			<version>1.18.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -73,15 +73,15 @@
 		<!-- Unit Testing Dependencies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
+			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.github.seeseemelk</groupId>
-			<artifactId>MockBukkit-v1.16</artifactId>
-			<version>1.5.2</version>
+			<artifactId>MockBukkit-v1.18</artifactId>
+			<version>1.15.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -119,7 +119,7 @@
 							<rules>
 								<bannedDependencies>
 									<excludes>
-										<exclude>org.apache.logging.log4j:log4j-core:(,2.15.0)</exclude>
+										<exclude>org.apache.logging.log4j:log4j-core:(,2.17.0)</exclude>
 									</excludes>
 								</bannedDependencies>
 							</rules>
@@ -144,7 +144,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>3.3.1</version>
 				<configuration>
 					<doclint>all,-missing</doclint>
 				</configuration>
