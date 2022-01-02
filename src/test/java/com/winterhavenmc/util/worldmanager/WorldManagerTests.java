@@ -1,4 +1,4 @@
-package com.winterhaven_mc.util;
+package com.winterhavenmc.util.worldmanager;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
@@ -35,7 +35,7 @@ public class WorldManagerTests {
 
 
 	@Nested
-	class WorldManagerSetup {
+	class WorldManagerSetupTests {
 		@Test
 		@DisplayName("Test worldmanager is not null.")
 		void worldManagerNotNull() {
@@ -57,7 +57,7 @@ public class WorldManagerTests {
 	}
 
 	@Nested
-	class WorldManagerGetWorld {
+	class WorldManagerGetWorldTests {
 		@Test
 		@DisplayName("Test get world name from world manager.")
 		void getWorldNameByString() {

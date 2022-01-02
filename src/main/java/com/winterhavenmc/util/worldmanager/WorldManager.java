@@ -1,4 +1,4 @@
-package com.winterhaven_mc.util;
+package com.winterhavenmc.util.worldmanager;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
