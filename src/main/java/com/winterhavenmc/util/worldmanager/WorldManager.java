@@ -9,10 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 
 @SuppressWarnings("unused")
@@ -21,8 +18,8 @@ public final class WorldManager {
 	// reference to main class
 	private final Plugin plugin;
 
-	// list of enabled world names
-	private final List<UUID> enabledWorldUIDs = new ArrayList<>();
+	// collection of enabled world names
+	private final Collection<UUID> enabledWorldUIDs = new HashSet<>();
 
 	// reference to MultiverseCore
 	private final MultiverseCore mvCore;
@@ -102,12 +99,12 @@ public final class WorldManager {
 	/**
 	 * get list of enabled world names from plugin config.yml file
 	 *
-	 * @return an ArrayList of String containing enabled world names
+	 * @return a Collection of String containing enabled world names
 	 */
-	public List<String> getEnabledWorldNames() {
+	public Collection<String> getEnabledWorldNames() {
 
-		// create empty list of string for return
-		List<String> resultList = new ArrayList<>();
+		// create empty collection of string for return
+		Collection<String> resultCollection = new HashSet<>();
 
 		// iterate through list of enabled world UIDs
 		for (UUID worldUID : this.enabledWorldUIDs) {
@@ -117,12 +114,12 @@ public final class WorldManager {
 
 			// if world is not null, add name to return list
 			if (world != null) {
-				resultList.add(world.getName());
+				resultCollection.add(world.getName());
 			}
 		}
 
 		// return result list
-		return resultList;
+		return resultCollection;
 	}
 
 
