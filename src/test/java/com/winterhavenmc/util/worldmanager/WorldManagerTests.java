@@ -59,21 +59,22 @@ public class WorldManagerTests {
 	@Nested
 	class WorldManagerGetWorldTests {
 		@Test
-		@DisplayName("Test get world name from world manager.")
+		@DisplayName("get world name from world manager")
 		void getWorldNameByString() {
 			Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock.getName()));
 		}
 
 		@Test
-		@DisplayName("Test get world name by world object.")
+		@DisplayName("get world name by world object")
 		void getWorldNameByWorld() {
 			Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock));
 		}
 
 		@Test
-		@DisplayName("Test get world name by world uuid.")
+		@DisplayName("get world name by world uuid")
 		void getWorldNameByWorldUid() {
 			Assertions.assertEquals("world", plugin.worldManager.getWorldName(worldMock.getUID()));
 		}
 	}
+
 }
