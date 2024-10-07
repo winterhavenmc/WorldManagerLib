@@ -64,7 +64,7 @@ public final class WorldManager {
 
 
 	/**
-	 * update enabledWorlds ArrayList field from plugin config.yml file
+	 * update enabledWorlds collection from plugin config.yml file
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public void reload() {
@@ -78,7 +78,7 @@ public final class WorldManager {
 			// iterate through all server worlds
 			for (World world : plugin.getServer().getWorlds()) {
 
-				// add world UID to field if it is not already in list
+				// add world UID to collection if it is not already in list
 				if (!this.enabledWorldUIDs.contains(world.getUID())) {
 					this.enabledWorldUIDs.add(world.getUID());
 				}
@@ -182,8 +182,8 @@ public final class WorldManager {
 	 */
 	public boolean isEnabled(final String worldName) {
 
-		// if worldName is null or empty, return false
-		if (worldName == null || worldName.isEmpty()) {
+		// if worldName is null or blank, return false
+		if (worldName == null || worldName.isBlank()) {
 			return false;
 		}
 
@@ -205,7 +205,6 @@ public final class WorldManager {
 	 *
 	 * @param worldUID the unique ID of a bukkit world
 	 * @return String containing Multiverse world alias or bukkit world name
-	 * @throws NullPointerException if passed worldUID is null
 	 */
 	public String getWorldName(final UUID worldUID) {
 
@@ -278,8 +277,8 @@ public final class WorldManager {
 	 */
 	public String getWorldName(final String passedName) {
 
-		// if passedName is null or empty, return empty string
-		if (passedName == null || passedName.isEmpty()) {
+		// if passedName is null or blank, return empty string
+		if (passedName == null || passedName.isBlank()) {
 			return "";
 		}
 
