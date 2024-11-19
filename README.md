@@ -1,0 +1,1 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5bc5707682204db49ec1721cc0c5ca43)](https://app.codacy.com/gh/winterhavenmc/WorldManagerLib/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
