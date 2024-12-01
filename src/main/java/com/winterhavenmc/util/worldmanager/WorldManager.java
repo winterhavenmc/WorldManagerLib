@@ -322,7 +322,7 @@ public final class WorldManager {
 		// sender must be non-null
 		Objects.requireNonNull(sender);
 
-		World world = plugin.getServer().getWorlds().get(0);
+		World world = plugin.getServer().getWorlds().getFirst();
 
 		if (sender instanceof Entity) {
 			world = ((Entity) sender).getWorld();
