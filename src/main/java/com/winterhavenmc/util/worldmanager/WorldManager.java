@@ -369,7 +369,7 @@ public final class WorldManager {
 			worldName = world.getName();
 		}
 		else {
-			worldName = plugin.getServer().getWorlds().get(0).getName();
+			worldName = plugin.getServer().getWorlds().getFirst().getName();
 		}
 
 		// if Multiverse is enabled, get MultiverseWorld object
