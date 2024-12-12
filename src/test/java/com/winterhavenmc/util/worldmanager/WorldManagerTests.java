@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.junit.jupiter.api.*;
@@ -131,7 +132,7 @@ public class WorldManagerTests {
 	}
 
 	@Nested
-	class WorldManagerGetWorldTests {
+	class getWorldNameTests {
 
 		@Test
 		@DisplayName("get world name from world manager by string name")
@@ -153,6 +154,15 @@ public class WorldManagerTests {
 			assertEquals("world", worldManager.getWorldName(new UUID(123, 123)));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((UUID) null));
 		}
+
+		@Test
+		@DisplayName("get world name by location")
+		void getWorldNameByLocation() {
+			Location location = new Location(mockWorld, 0.0, 0.0, 0.0);
+			assertEquals("world", worldManager.getWorldName(location));
+			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((Location) null));
+		}
+
 	}
 
 	@Nested
@@ -208,8 +218,19 @@ public class WorldManagerTests {
 		}
 
 		@Test
+		void getSpawnLocationTest_by_world_null() {
+			assertThrows(IllegalArgumentException.class, () -> worldManager.getSpawnLocation((World) null));
+		}
+
+		@Test
 		void getSpawnLocationTest_by_entity() {
 			assertInstanceOf(Location.class, worldManager.getSpawnLocation(mockPlayer));
 		}
+
+		@Test
+		void getSpawnLocationTest_by_entity_null() {
+			assertThrows(IllegalArgumentException.class, () -> worldManager.getSpawnLocation((Entity) null));
+		}
 	}
+
 }
