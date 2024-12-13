@@ -7,7 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
 import org.junit.jupiter.api.*;
 
 import java.util.Collection;
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class WorldManagerTests {
 
-	private final PluginMain mockPlugin = mock(PluginMain.class);
+	private final Plugin mockPlugin = mock(Plugin.class);
 	private final World mockWorld = mock(World.class);
 	private final World mockWorld_nether = mock(World.class);
 	private final Server mockServer = mock(Server.class);
@@ -78,7 +80,8 @@ public class WorldManagerTests {
 
 	@AfterEach
 	public void tearDown() {
-
+		// destroy world manager
+		worldManager = null;
 	}
 
 
