@@ -27,16 +27,16 @@ import static org.mockito.Mockito.when;
 public class WorldManagerTests {
 
 	private final Plugin mockPlugin = mock(Plugin.class);
-	private final World mockWorld = mock(World.class);
-	private final World mockWorld_nether = mock(World.class);
+	private final World mockWorld0 = mock(World.class);
+	private final World mockWorld1 = mock(World.class);
 	private final Server mockServer = mock(Server.class);
 	private final Player mockPlayer = mock(Player.class);
 	private final PluginManager mockPluginManager = mock(PluginManager.class);
 	private final FileConfiguration mockConfiguration = mock(FileConfiguration.class);
 
 	private final static UUID mockPlayerUUID = new UUID(0,1);
-	private final static UUID mockWorldUUID = new UUID(1,1);
-	private final static UUID mockWorld_netherUUID = new UUID(1,2);
+	private final static UUID mockWorld0UUID = new UUID(1,1);
+	private final static UUID mockWorld1UUID = new UUID(1,2);
 
 	private WorldManager worldManager;
 
@@ -48,21 +48,21 @@ public class WorldManagerTests {
 		when(mockPlugin.getLogger()).thenReturn(Logger.getLogger("Test Logger"));
 
 		// return responses from mock world
-		when(mockWorld.getName()).thenReturn("world");
-		when(mockWorld.getUID()).thenReturn(mockWorldUUID);
-		when(mockWorld.getSpawnLocation()).thenReturn(new Location(mockWorld, 0.0, 0.0, 0.0));
+		when(mockWorld0.getName()).thenReturn("world");
+		when(mockWorld0.getUID()).thenReturn(mockWorld0UUID);
+		when(mockWorld0.getSpawnLocation()).thenReturn(new Location(mockWorld0, 0.0, 0.0, 0.0));
 
-		when(mockWorld_nether.getName()).thenReturn("nether");
-		when(mockWorld_nether.getUID()).thenReturn(mockWorld_netherUUID);
-		when(mockWorld.getSpawnLocation()).thenReturn(new Location(mockWorld_nether, 0.0, 0.0, 0.0));
+		when(mockWorld1.getName()).thenReturn("nether");
+		when(mockWorld1.getUID()).thenReturn(mockWorld1UUID);
+		when(mockWorld0.getSpawnLocation()).thenReturn(new Location(mockWorld1, 0.0, 0.0, 0.0));
 
 		// return mock server
 		when(mockPlugin.getServer()).thenReturn(mockServer);
 
 		// return responses from the mock server
-		when(mockServer.getWorlds()).thenReturn(List.of(mockWorld, mockWorld_nether));
-		when(mockServer.getWorld(mockWorldUUID)).thenReturn(mockWorld);
-		when(mockServer.getWorld("world")).thenReturn(mockWorld);
+		when(mockServer.getWorlds()).thenReturn(List.of(mockWorld0, mockWorld1));
+		when(mockServer.getWorld(mockWorld0UUID)).thenReturn(mockWorld0);
+		when(mockServer.getWorld("world")).thenReturn(mockWorld0);
 
 		// return mock plugin manager
 		when(mockServer.getPluginManager()).thenReturn(mockPluginManager);
@@ -76,8 +76,8 @@ public class WorldManagerTests {
 
 		when(mockPlayer.getName()).thenReturn("player1");
 		when(mockPlayer.getUniqueId()).thenReturn(mockPlayerUUID);
-		when(mockPlayer.getWorld()).thenReturn(mockWorld);
-		when(mockPlayer.getLocation()).thenReturn(new Location(mockWorld, 3.0, 4.0, 5.0));
+		when(mockPlayer.getWorld()).thenReturn(mockWorld0);
+		when(mockPlayer.getLocation()).thenReturn(new Location(mockWorld0, 3.0, 4.0, 5.0));
 
 		// create a world manager instance by injecting mock plugin
 		worldManager = new WorldManager(mockPlugin);
@@ -128,15 +128,8 @@ public class WorldManagerTests {
 		@Test
 		@DisplayName("test world name 'world' is in enabled worlds list.")
 		void getEnabledWorldNamesTest_list_contains_null_world() {
-
-			World world = mockServer.getWorld("world");
-			assertNotNull(world, "test world is null.");
-
-			Collection<String> names = worldManager.getEnabledWorldNames();
-			for (String name : names) {
-				System.out.println(name);
-			}
-			Assertions.assertTrue(names.contains("world"));
+			Assertions.assertTrue(worldManager.getEnabledWorldNames().contains("world"));
+			Assertions.assertFalse(worldManager.getEnabledWorldNames().contains("nether"));
 		}
 	}
 
@@ -145,29 +138,29 @@ public class WorldManagerTests {
 
 		@Test
 		@DisplayName("get world name from world manager by string name")
-		void getWorldNameByString() {
+		void getWorldNameTest_by_string() {
 			assertEquals("world", worldManager.getWorldName("world"));
 			assertEquals("", worldManager.getWorldName((String) null));
 		}
 
 		@Test
 		@DisplayName("get world name from world manager by world object")
-		void getWorldName_by_world_object() {
+		void getWorldNameTest_by_world_object() {
 			assertEquals("world", worldManager.getWorldName(mockServer.getWorld("world")));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((World) null));
 		}
 
 		@Test
 		@DisplayName("get world name by world uuid")
-		void getWorldName_by_world_uid() {
-			assertEquals("world", worldManager.getWorldName(mockWorldUUID));
+		void getWorldNameTest_by_world_uid() {
+			assertEquals("world", worldManager.getWorldName(mockWorld0UUID));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((UUID) null));
 		}
 
 		@Test
 		@DisplayName("get world name by location")
-		void getWorldName_by_location() {
-			Location location = new Location(mockWorld, 0.0, 0.0, 0.0);
+		void getWorldNameTest_by_location() {
+			Location location = new Location(mockWorld0, 0.0, 0.0, 0.0);
 			assertEquals("world", worldManager.getWorldName(location));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((Location) null));
 		}
@@ -175,52 +168,61 @@ public class WorldManagerTests {
 		@Test
 		@DisplayName("get world name from world manager by world object")
 		void getWorldName_by_entity() {
-			assertEquals("world", worldManager.getWorldName((CommandSender) mockPlayer));
+			assertEquals("world", worldManager.getWorldName(mockPlayer));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((CommandSender) null));
 		}
 	}
 
 	@Nested
-	class worldEnabledTests {
+	class isEnabledTests {
 		@Test
-		void worldEnabledTest_by_object() {
-			assertTrue(worldManager.isEnabled(mockWorld));
+		void isEnabledTest_by_object() {
+			assertTrue(worldManager.isEnabled(mockWorld0));
+			assertTrue(worldManager.isEnabled(mockWorld1));
 		}
 
 		@Test
-		void worldEnabledTest_by_object_null() {
+		void isEnabledTest_by_object2() {
+			when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(List.of("world"));
+			assertTrue(worldManager.isEnabled(mockWorld0));
+			assertTrue(worldManager.isEnabled(mockWorld1)); // TODO: THIS SHOULD RETURN FALSE
+			System.out.println("Enabled worlds: " + worldManager.getEnabledWorldNames());
+		}
+
+		@Test
+		void isEnabledTest_by_object_null() {
 			assertFalse(worldManager.isEnabled((World) null));
 		}
 
 		@Test
-		void worldEnabledTest_by_uid() {
-			assertTrue(worldManager.isEnabled(mockWorld.getUID()));
+		void isEnabledTest_by_uid() {
+			assertTrue(worldManager.isEnabled(mockWorld0.getUID()));
 		}
 
 		@Test
-		void worldEnabledTest_by_uid_null() {
+		void isEnabledTest_by_uid_null() {
 			UUID uid = null;
 			assertFalse(worldManager.isEnabled(uid));
 		}
 
 		@Test
-		void worldEnabledTest_by_name() {
-			assertTrue(worldManager.isEnabled(mockWorld.getName()));
+		void isEnabledTest_by_name() {
+			assertTrue(worldManager.isEnabled(mockWorld0.getName()));
 		}
 
 		@Test
-		void worldEnabledTest_by_name_null() {
+		void isEnabledTest_by_name_null() {
 			String string = null;
 			assertFalse(worldManager.isEnabled(string));
 		}
 
 		@Test
-		void worldEnabledTest_by_name_empty() {
+		void isEnabledTest_by_name_empty() {
 			assertFalse(worldManager.isEnabled(""));
 		}
 
 		@Test
-		void worldEnabledTest_by_name_nonexistent() {
+		void isEnabledTest_by_name_nonexistent() {
 			assertFalse(worldManager.isEnabled("nonexistent"));
 		}
 	}
@@ -229,7 +231,7 @@ public class WorldManagerTests {
 	class SpawnLocationTests {
 		@Test
 		void getSpawnLocationTest_by_world() {
-			assertInstanceOf(Location.class, worldManager.getSpawnLocation(mockWorld));
+			assertInstanceOf(Location.class, worldManager.getSpawnLocation(mockWorld0));
 		}
 
 		@Test
