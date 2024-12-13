@@ -1,5 +1,0 @@
-name: ${project.name}
-main: com.winterhavenmc.util.worldmanager.PluginMain
-author: ${project.author}
-version: ${project.version}
-api-version: 1.21.3
