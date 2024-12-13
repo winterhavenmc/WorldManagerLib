@@ -3,6 +3,7 @@ package com.winterhavenmc.util.worldmanager;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -143,26 +144,32 @@ public class WorldManagerTests {
 
 		@Test
 		@DisplayName("get world name from world manager by world object")
-		void getWorldNameByWorld() {
+		void getWorldName_by_world_object() {
 			assertEquals("world", worldManager.getWorldName(mockServer.getWorld("world")));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((World) null));
 		}
 
 		@Test
 		@DisplayName("get world name by world uuid")
-		void getWorldNameByWorldUid() {
+		void getWorldName_by_world_uid() {
 			assertEquals("world", worldManager.getWorldName(new UUID(123, 123)));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((UUID) null));
 		}
 
 		@Test
 		@DisplayName("get world name by location")
-		void getWorldNameByLocation() {
+		void getWorldName_by_location() {
 			Location location = new Location(mockWorld, 0.0, 0.0, 0.0);
 			assertEquals("world", worldManager.getWorldName(location));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((Location) null));
 		}
 
+		@Test
+		@DisplayName("get world name from world manager by world object")
+		void getWorldName_by_entity() {
+			assertEquals("world", worldManager.getWorldName((CommandSender) mockPlayer));
+			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((CommandSender) null));
+		}
 	}
 
 	@Nested
