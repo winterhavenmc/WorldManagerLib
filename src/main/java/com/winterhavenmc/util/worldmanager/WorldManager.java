@@ -40,6 +40,8 @@ public final class WorldManager {
 	// reference to MultiverseCore
 	private final MultiverseCore mvCore;
 
+	private final static String ENABLED_WORLDS_KEY = "enabled-worlds";
+	private final static String DISABLED_WORLDS_KEY = "disabled-worlds";
 
 	/**
 	 * Class constructor
@@ -72,7 +74,7 @@ public final class WorldManager {
 		this.enabledWorldRegistry.clear();
 
 		// if config list of enabled worlds is empty, add all server worlds
-		if (plugin.getConfig().getStringList("enabled-worlds").isEmpty()) {
+		if (plugin.getConfig().getStringList(ENABLED_WORLDS_KEY).isEmpty()) {
 
 			// iterate through all server worlds
 			for (World world : plugin.getServer().getWorlds()) {
@@ -83,7 +85,7 @@ public final class WorldManager {
 		// otherwise, add only the worlds in the config enabled worlds list
 		else {
 			// iterate through config list of enabled worlds, and add valid world UIDs to field
-			for (String worldName : plugin.getConfig().getStringList("enabled-worlds")) {
+			for (String worldName : plugin.getConfig().getStringList(ENABLED_WORLDS_KEY)) {
 
 				// get world by name
 				World world = plugin.getServer().getWorld(worldName);
@@ -96,7 +98,7 @@ public final class WorldManager {
 		}
 
 		// remove config list of disabled worlds from enabledWorldUIDs field
-		for (String worldName : plugin.getConfig().getStringList("disabled-worlds")) {
+		for (String worldName : plugin.getConfig().getStringList(DISABLED_WORLDS_KEY)) {
 
 			// get world by name
 			World world = plugin.getServer().getWorld(worldName);
