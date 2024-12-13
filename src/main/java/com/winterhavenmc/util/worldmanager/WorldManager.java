@@ -24,7 +24,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
@@ -47,7 +46,7 @@ public final class WorldManager {
 	 *
 	 * @param plugin passed reference to the plugin main class
 	 */
-	public WorldManager(final JavaPlugin plugin) {
+	public WorldManager(final Plugin plugin) {
 
 		// set reference to main class
 		this.plugin = plugin;
