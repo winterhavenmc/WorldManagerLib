@@ -440,15 +440,4 @@ public final class WorldManager {
 		return entity.getWorld().getSpawnLocation();
 	}
 
-
-	/* Methods for testing */
-
-	Collection<UUID> getEnabledWorldUIDs() {
-		return enabledWorldRegistry;
-	}
-
-	void addEnabledWorldUUID(UUID uuid) {
-		enabledWorldRegistry.add(uuid);
-	}
-
 }
