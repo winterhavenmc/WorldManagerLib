@@ -34,6 +34,10 @@ public class WorldManagerTests {
 	private final PluginManager mockPluginManager = mock(PluginManager.class);
 	private final FileConfiguration mockConfiguration = mock(FileConfiguration.class);
 
+	private final static UUID mockPlayerUUID = new UUID(0,1);
+	private final static UUID mockWorldUUID = new UUID(1,1);
+	private final static UUID mockWorld_netherUUID = new UUID(1,2);
+
 	private WorldManager worldManager;
 
 
@@ -45,18 +49,19 @@ public class WorldManagerTests {
 
 		// return responses from mock world
 		when(mockWorld.getName()).thenReturn("world");
-		when(mockWorld.getUID()).thenReturn(new UUID(123, 123));
+		when(mockWorld.getUID()).thenReturn(mockWorldUUID);
 		when(mockWorld.getSpawnLocation()).thenReturn(new Location(mockWorld, 0.0, 0.0, 0.0));
 
 		when(mockWorld_nether.getName()).thenReturn("nether");
-		when(mockWorld_nether.getUID()).thenReturn(new UUID(1234, 1234));
+		when(mockWorld_nether.getUID()).thenReturn(mockWorld_netherUUID);
+		when(mockWorld.getSpawnLocation()).thenReturn(new Location(mockWorld_nether, 0.0, 0.0, 0.0));
 
 		// return mock server
 		when(mockPlugin.getServer()).thenReturn(mockServer);
 
 		// return responses from the mock server
 		when(mockServer.getWorlds()).thenReturn(List.of(mockWorld, mockWorld_nether));
-		when(mockServer.getWorld(new UUID(123, 123))).thenReturn(mockWorld);
+		when(mockServer.getWorld(mockWorldUUID)).thenReturn(mockWorld);
 		when(mockServer.getWorld("world")).thenReturn(mockWorld);
 
 		// return mock plugin manager
@@ -67,10 +72,10 @@ public class WorldManagerTests {
 		// return mock configuration
 		when(mockPlugin.getConfig()).thenReturn(mockConfiguration);
 		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(Collections.emptyList());
-		when(mockConfiguration.getStringList("disabled-worlds")).thenReturn(Collections.emptyList());
+		when(mockConfiguration.getStringList("disabled-worlds")).thenReturn(List.of("disabled_world1", "disabled_world2"));
 
 		when(mockPlayer.getName()).thenReturn("player1");
-		when(mockPlayer.getUniqueId()).thenReturn(new UUID(789, 789));
+		when(mockPlayer.getUniqueId()).thenReturn(mockPlayerUUID);
 		when(mockPlayer.getWorld()).thenReturn(mockWorld);
 		when(mockPlayer.getLocation()).thenReturn(new Location(mockWorld, 3.0, 4.0, 5.0));
 
@@ -155,7 +160,7 @@ public class WorldManagerTests {
 		@Test
 		@DisplayName("get world name by world uuid")
 		void getWorldName_by_world_uid() {
-			assertEquals("world", worldManager.getWorldName(new UUID(123, 123)));
+			assertEquals("world", worldManager.getWorldName(mockWorldUUID));
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((UUID) null));
 		}
 
