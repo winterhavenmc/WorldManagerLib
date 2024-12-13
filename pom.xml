@@ -1,8 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.winterhaven-mc</groupId>
 	<artifactId>world-manager-lib</artifactId>
-	<version>1.17.1</version>
+	<version>1.21.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
 	<name>WorldManagerLib</name>
 
 	<url>https://github.com/tim-savage/WorldManagerLib</url>
@@ -14,12 +17,12 @@
 	<properties>
 		<project.author>Tim Savage</project.author>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>17</maven.compiler.release>
+		<maven.compiler.release>21</maven.compiler.release>
 	</properties>
 
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/tim-savage/WorldManagerLib/issues</url>
+		<url>https://github.com/winterhavenmc/WorldManagerLib/issues</url>
 	</issueManagement>
 
 	<licenses>
@@ -31,28 +34,6 @@
 	</licenses>
 
 	<profiles>
-		<profile>
-			<id>github</id>
-			<distributionManagement>
-				<repository>
-					<id>github</id>
-					<name>GitHub winterhavenmc Apache Maven Packages</name>
-					<url>https://maven.pkg.github.com/winterhavenmc/WorldManagerLib/</url>
-				</repository>
-			</distributionManagement>
-
-			<repositories>
-				<repository>
-					<id>spigot-repo</id>
-					<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-				</repository>
-				<repository>
-					<id>glaremasters-repo</id>
-					<url>https://repo.glaremasters.me/repository/public/</url>
-				</repository>
-			</repositories>
-		</profile>
-
 		<profile>
 			<id>winterhaven</id>
 			<distributionManagement>
@@ -79,14 +60,51 @@
 				</repository>
 			</repositories>
 		</profile>
+
+		<profile>
+			<id>github</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<distributionManagement>
+				<repository>
+					<id>github</id>
+					<name>GitHub winterhavenmc Apache Maven Packages</name>
+					<url>https://maven.pkg.github.com/winterhavenmc/WorldManagerLib/</url>
+				</repository>
+			</distributionManagement>
+
+			<repositories>
+				<repository>
+					<id>spigot-repo</id>
+					<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+				</repository>
+				<repository>
+					<id>papermc</id>
+					<url>https://repo.papermc.io/repository/maven-public/</url>
+				</repository>
+				<repository>
+					<id>glaremasters-repo</id>
+					<url>https://repo.glaremasters.me/repository/public/</url>
+				</repository>
+			</repositories>
+		</profile>
 	</profiles>
 
 	<dependencies>
 		<!-- Spigot API -->
+<!--		<dependency>-->
+<!--			<groupId>org.spigotmc</groupId>-->
+<!--			<artifactId>spigot-api</artifactId>-->
+<!--			<version>1.21.3-R0.1-SNAPSHOT</version>-->
+<!--			<scope>provided</scope>-->
+<!--		</dependency>-->
+
+		<!-- Paper API -->
 		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.19.2-R0.1-SNAPSHOT</version>
+			<groupId>io.papermc.paper</groupId>
+			<artifactId>paper-api</artifactId>
+			<version>1.21.4-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -102,15 +120,22 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.0</version>
+			<version>5.11.3</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>5.12.0</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>com.github.seeseemelk</groupId>
-			<artifactId>MockBukkit-v1.18</artifactId>
-			<version>2.85.2</version>
-			<scope>test</scope>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.15.10</version>
 		</dependency>
 	</dependencies>
 
@@ -135,7 +160,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>ban-bad-log4j-versions</id>
@@ -161,14 +186,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.9.0</version>
+				<version>3.13.0</version>
 			</plugin>
 
 			<!-- Create Javadoc jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.8.0</version>
 				<configuration>
 					<doclint>all,-missing</doclint>
 				</configuration>
@@ -186,7 +211,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -201,14 +226,52 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.3.1</version>
 
 				<configuration>
 					<junitArtifactName>org.junit.jupiter:junit-jupiter</junitArtifactName>
 					<trimStackTrace>false</trimStackTrace>
 				</configuration>
 			</plugin>
-		</plugins>
+			<!-- plugin to generate coverage reports -->
+			<plugin>
+				<groupId>org.jetbrains.kotlinx</groupId>
+				<artifactId>kover-maven-plugin</artifactId>
+				<version>0.8.3</version>
+				<executions>
+					<!-- instrument test tasks -->
+					<execution>
+						<id>instr</id>
+						<goals>
+							<goal>instrumentation</goal>
+						</goals>
+					</execution>
 
+					<!-- generate XML report in verify phase -->
+					<execution>
+						<id>kover-xml</id>
+						<goals>
+							<goal>report-xml</goal>
+						</goals>
+					</execution>
+
+					<!-- generate HTML report in verify phase -->
+					<execution>
+						<id>kover-html</id>
+						<goals>
+							<goal>report-html</goal>
+						</goals>
+					</execution>
+
+					<!-- check coverage rules in verify phase -->
+					<execution>
+						<id>kover-verify</id>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 </project>

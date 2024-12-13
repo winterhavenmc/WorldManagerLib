@@ -24,7 +24,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
@@ -36,7 +35,7 @@ public final class WorldManager {
 	private final Plugin plugin;
 
 	// collection of enabled world names
-	private final Collection<UUID> enabledWorldUIDs = new HashSet<>();
+	private final Collection<UUID> enabledWorldRegistry = new HashSet<>();
 
 	// reference to MultiverseCore
 	private final MultiverseCore mvCore;
@@ -47,7 +46,7 @@ public final class WorldManager {
 	 *
 	 * @param plugin passed reference to the plugin main class
 	 */
-	public WorldManager(final JavaPlugin plugin) {
+	public WorldManager(final Plugin plugin) {
 
 		// set reference to main class
 		this.plugin = plugin;
@@ -70,18 +69,15 @@ public final class WorldManager {
 	public void reload() {
 
 		// clear enabledWorldUIDs field
-		this.enabledWorldUIDs.clear();
+		this.enabledWorldRegistry.clear();
 
 		// if config list of enabled worlds is empty, add all server worlds
 		if (plugin.getConfig().getStringList("enabled-worlds").isEmpty()) {
 
 			// iterate through all server worlds
 			for (World world : plugin.getServer().getWorlds()) {
-
 				// add world UID to collection if it is not already in list
-				if (!this.enabledWorldUIDs.contains(world.getUID())) {
-					this.enabledWorldUIDs.add(world.getUID());
-				}
+				this.enabledWorldRegistry.add(world.getUID());
 			}
 		}
 		// otherwise, add only the worlds in the config enabled worlds list
@@ -93,8 +89,8 @@ public final class WorldManager {
 				World world = plugin.getServer().getWorld(worldName);
 
 				// add world UID to field if it is not already in list and world exists
-				if (world != null && !this.enabledWorldUIDs.contains(world.getUID())) {
-					this.enabledWorldUIDs.add(world.getUID());
+				if (world != null && !this.enabledWorldRegistry.contains(world.getUID())) {
+					this.enabledWorldRegistry.add(world.getUID());
 				}
 			}
 		}
@@ -107,7 +103,7 @@ public final class WorldManager {
 
 			// if world is not null remove UID from list
 			if (world != null) {
-				this.enabledWorldUIDs.remove(world.getUID());
+				this.enabledWorldRegistry.remove(world.getUID());
 			}
 		}
 	}
@@ -120,16 +116,16 @@ public final class WorldManager {
 	 */
 	public Collection<String> getEnabledWorldNames() {
 
-		// create empty collection of string for return
-		Collection<String> resultCollection = new HashSet<>();
+		// create empty set of string for return
+		Set<String> resultCollection = new HashSet<>();
 
 		// iterate through list of enabled world UIDs
-		for (UUID worldUID : this.enabledWorldUIDs) {
+		for (UUID worldUID : enabledWorldRegistry) {
 
 			// get world by UID
 			World world = plugin.getServer().getWorld(worldUID);
 
-			// if world is not null, add name to return list
+			// if world is not null, add name to return set
 			if (world != null) {
 				resultCollection.add(world.getName());
 			}
@@ -153,7 +149,7 @@ public final class WorldManager {
 			return false;
 		}
 
-		return this.enabledWorldUIDs.contains(worldUID);
+		return this.enabledWorldRegistry.contains(worldUID);
 	}
 
 
@@ -170,7 +166,7 @@ public final class WorldManager {
 			return false;
 		}
 
-		return this.enabledWorldUIDs.contains(world.getUID());
+		return this.enabledWorldRegistry.contains(world.getUID());
 	}
 
 
@@ -195,7 +191,7 @@ public final class WorldManager {
 			return false;
 		}
 
-		return this.enabledWorldUIDs.contains(world.getUID());
+		return this.enabledWorldRegistry.contains(world.getUID());
 	}
 
 
@@ -209,7 +205,9 @@ public final class WorldManager {
 	public String getWorldName(final UUID worldUID) {
 
 		// worldUID must be non-null
-		Objects.requireNonNull(worldUID);
+		if (worldUID == null) {
+			throw new IllegalArgumentException("The argument passed is null; a valid UUID is required.");
+		}
 
 		// get world
 		World world = plugin.getServer().getWorld(worldUID);
@@ -247,8 +245,10 @@ public final class WorldManager {
 	 */
 	public String getWorldName(final World world) {
 
-		// world must be non-null
-		Objects.requireNonNull(world);
+		// passed world must be non-null
+		if (world == null) {
+			throw new IllegalArgumentException("The argument passed is null; a valid World is required.");
+		}
 
 		// get bukkit world name
 		String worldName = world.getName();
@@ -320,9 +320,11 @@ public final class WorldManager {
 	public String getWorldName(final CommandSender sender) {
 
 		// sender must be non-null
-		Objects.requireNonNull(sender);
+		if (sender == null) {
+			throw new IllegalArgumentException("The argument passed is null; a valid CommandSender is required.");
+		}
 
-		World world = plugin.getServer().getWorlds().get(0);
+		World world = plugin.getServer().getWorlds().getFirst();
 
 		if (sender instanceof Entity) {
 			world = ((Entity) sender).getWorld();
@@ -357,7 +359,9 @@ public final class WorldManager {
 	public String getWorldName(final Location location) {
 
 		// passed location must be non-null
-		Objects.requireNonNull(location);
+		if (location == null) {
+			throw new IllegalArgumentException("The argument passed is null; a valid Location is required.");
+		}
 
 		// get world from location
 		World world = location.getWorld();
@@ -369,7 +373,7 @@ public final class WorldManager {
 			worldName = world.getName();
 		}
 		else {
-			worldName = plugin.getServer().getWorlds().get(0).getName();
+			worldName = plugin.getServer().getWorlds().getFirst().getName();
 		}
 
 		// if Multiverse is enabled, get MultiverseWorld object
@@ -399,7 +403,9 @@ public final class WorldManager {
 	public Location getSpawnLocation(final World world) {
 
 		// passed world must be non-null
-		Objects.requireNonNull(world);
+		if (world == null) {
+			throw new IllegalArgumentException("The argument is null; a valid World is required.");
+		}
 
 		// if Multiverse is enabled, return Multiverse world spawn location
 		if (mvCore != null && mvCore.isEnabled()) {
@@ -421,7 +427,9 @@ public final class WorldManager {
 	public Location getSpawnLocation(final Entity entity) {
 
 		// passed entity must be non-null
-		Objects.requireNonNull(entity);
+		if (entity == null) {
+			throw new IllegalArgumentException("The argument passed is null; a valid Entity is required.");
+		}
 
 		// if Multiverse is enabled, return Multiverse world spawn location
 		if (mvCore != null && mvCore.isEnabled()) {
@@ -430,6 +438,17 @@ public final class WorldManager {
 
 		// return bukkit world spawn location
 		return entity.getWorld().getSpawnLocation();
+	}
+
+
+	/* Methods for testing */
+
+	Collection<UUID> getEnabledWorldUIDs() {
+		return enabledWorldRegistry;
+	}
+
+	void addEnabledWorldUUID(UUID uuid) {
+		enabledWorldRegistry.add(uuid);
 	}
 
 }
