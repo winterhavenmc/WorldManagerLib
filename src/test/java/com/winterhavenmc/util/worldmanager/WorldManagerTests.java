@@ -200,6 +200,7 @@ public class WorldManagerTests {
 			assertTrue(worldManager.isEnabled(mockWorld0.getUID()));
 		}
 
+		@SuppressWarnings("ConstantValue")
 		@Test
 		void isEnabledTest_by_uid_null() {
 			UUID uid = null;
@@ -211,6 +212,7 @@ public class WorldManagerTests {
 			assertTrue(worldManager.isEnabled(mockWorld0.getName()));
 		}
 
+		@SuppressWarnings("ConstantValue")
 		@Test
 		void isEnabledTest_by_name_null() {
 			String string = null;
