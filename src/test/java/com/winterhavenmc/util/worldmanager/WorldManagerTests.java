@@ -54,7 +54,7 @@ public class WorldManagerTests {
 
 		when(mockWorld1.getName()).thenReturn("nether");
 		when(mockWorld1.getUID()).thenReturn(mockWorld1UUID);
-		when(mockWorld0.getSpawnLocation()).thenReturn(new Location(mockWorld1, 0.0, 0.0, 0.0));
+		when(mockWorld1.getSpawnLocation()).thenReturn(new Location(mockWorld1, 0.0, 0.0, 0.0));
 
 		// return mock server
 		when(mockPlugin.getServer()).thenReturn(mockServer);
