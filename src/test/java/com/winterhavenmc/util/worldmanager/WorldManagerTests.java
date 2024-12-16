@@ -19,13 +19,14 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class WorldManagerTests {
 
+	public static final String ENABLED_WORLDS_CONFIG_KEY = "enabled-worlds";
+	public static final String DISABLED_WORLDS_CONFIG_KEY = "disabled-worlds";
 	private final Plugin mockPlugin = mock(Plugin.class);
 	private final World mockWorld0 = mock(World.class);
 	private final World mockWorld1 = mock(World.class);
@@ -71,8 +72,8 @@ public class WorldManagerTests {
 
 		// return mock configuration
 		when(mockPlugin.getConfig()).thenReturn(mockConfiguration);
-		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(Collections.emptyList());
-		when(mockConfiguration.getStringList("disabled-worlds")).thenReturn(List.of("disabled_world1", "disabled_world2"));
+		when(mockConfiguration.getStringList(ENABLED_WORLDS_CONFIG_KEY)).thenReturn(Collections.emptyList());
+		when(mockConfiguration.getStringList(DISABLED_WORLDS_CONFIG_KEY)).thenReturn(List.of("disabled_world1", "disabled_world2"));
 
 		when(mockPlayer.getName()).thenReturn("player1");
 		when(mockPlayer.getUniqueId()).thenReturn(mockPlayerUUID);
