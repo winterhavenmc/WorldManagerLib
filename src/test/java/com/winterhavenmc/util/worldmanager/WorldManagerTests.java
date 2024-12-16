@@ -251,4 +251,28 @@ public class WorldManagerTests {
 		}
 	}
 
+	@Test
+	void reloadTest_not_null() {
+		worldManager.reload();
+		assertNotNull(worldManager, "world manager is null after reload.");
+	}
+
+	@Test
+	void reloadTest_enabled_worlds_populated() {
+		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(List.of("world", "invalid_world_name"));
+		worldManager.reload();
+		assertTrue(worldManager.isEnabled("world"), "world 'world' is not enabled.");
+		assertFalse(worldManager.getEnabledWorldNames().isEmpty(), "the enabled worlds list is empty.");
+		assertEquals(1, worldManager.getEnabledWorldNames().size(), "there should be only one enabled world.");
+	}
+
+	@Test
+	void getWorldsTest() {
+		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(List.of("world", "invalid_world_name"));
+		assertTrue(worldManager.getEnabledWorldNames().contains("world"), "world 'world' is not enabled.");
+		assertFalse(worldManager.getEnabledWorldNames().isEmpty(), "the enabled worlds list is empty.");
+		assertEquals(1, worldManager.getEnabledWorldNames().size(), "there should be only one enabled world.");
+		verify(mockConfiguration, atLeastOnce()).getStringList("enabled-worlds");
+	}
+
 }
