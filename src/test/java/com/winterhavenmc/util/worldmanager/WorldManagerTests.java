@@ -19,13 +19,14 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class WorldManagerTests {
 
+	public static final String ENABLED_WORLDS_CONFIG_KEY = "enabled-worlds";
+	public static final String DISABLED_WORLDS_CONFIG_KEY = "disabled-worlds";
 	private final Plugin mockPlugin = mock(Plugin.class);
 	private final World mockWorld0 = mock(World.class);
 	private final World mockWorld1 = mock(World.class);
@@ -54,7 +55,7 @@ public class WorldManagerTests {
 
 		when(mockWorld1.getName()).thenReturn("nether");
 		when(mockWorld1.getUID()).thenReturn(mockWorld1UUID);
-		when(mockWorld0.getSpawnLocation()).thenReturn(new Location(mockWorld1, 0.0, 0.0, 0.0));
+		when(mockWorld1.getSpawnLocation()).thenReturn(new Location(mockWorld1, 0.0, 0.0, 0.0));
 
 		// return mock server
 		when(mockPlugin.getServer()).thenReturn(mockServer);
@@ -71,8 +72,8 @@ public class WorldManagerTests {
 
 		// return mock configuration
 		when(mockPlugin.getConfig()).thenReturn(mockConfiguration);
-		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(Collections.emptyList());
-		when(mockConfiguration.getStringList("disabled-worlds")).thenReturn(List.of("disabled_world1", "disabled_world2"));
+		when(mockConfiguration.getStringList(ENABLED_WORLDS_CONFIG_KEY)).thenReturn(Collections.emptyList());
+		when(mockConfiguration.getStringList(DISABLED_WORLDS_CONFIG_KEY)).thenReturn(List.of("disabled_world1", "disabled_world2"));
 
 		when(mockPlayer.getName()).thenReturn("player1");
 		when(mockPlayer.getUniqueId()).thenReturn(mockPlayerUUID);
@@ -199,6 +200,7 @@ public class WorldManagerTests {
 			assertTrue(worldManager.isEnabled(mockWorld0.getUID()));
 		}
 
+		@SuppressWarnings("ConstantValue")
 		@Test
 		void isEnabledTest_by_uid_null() {
 			UUID uid = null;
@@ -210,6 +212,7 @@ public class WorldManagerTests {
 			assertTrue(worldManager.isEnabled(mockWorld0.getName()));
 		}
 
+		@SuppressWarnings("ConstantValue")
 		@Test
 		void isEnabledTest_by_name_null() {
 			String string = null;
@@ -248,6 +251,30 @@ public class WorldManagerTests {
 		void getSpawnLocationTest_by_entity_null() {
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getSpawnLocation((Entity) null));
 		}
+	}
+
+	@Test
+	void reloadTest_not_null() {
+		worldManager.reload();
+		assertNotNull(worldManager, "world manager is null after reload.");
+	}
+
+	@Test
+	void reloadTest_enabled_worlds_populated() {
+		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(List.of("world", "invalid_world_name"));
+		worldManager.reload();
+		assertTrue(worldManager.isEnabled("world"), "world 'world' is not enabled.");
+		assertFalse(worldManager.getEnabledWorldNames().isEmpty(), "the enabled worlds list is empty.");
+		assertEquals(1, worldManager.getEnabledWorldNames().size(), "there should be only one enabled world.");
+	}
+
+	@Test
+	void getWorldsTest() {
+		when(mockConfiguration.getStringList("enabled-worlds")).thenReturn(List.of("world", "invalid_world_name"));
+		assertTrue(worldManager.getEnabledWorldNames().contains("world"), "world 'world' is not enabled.");
+		assertFalse(worldManager.getEnabledWorldNames().isEmpty(), "the enabled worlds list is empty.");
+		assertEquals(1, worldManager.getEnabledWorldNames().size(), "there should be only one enabled world.");
+		verify(mockConfiguration, atLeastOnce()).getStringList("enabled-worlds");
 	}
 
 }
