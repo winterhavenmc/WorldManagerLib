@@ -155,12 +155,11 @@ public final class WorldManager {
 
 
 	/**
-	 * get list of enabled world names from plugin config.yml file
+	 * get collection of enabled world names from registry
 	 *
 	 * @return a Collection of String containing enabled world names
 	 */
 	public Collection<String> getEnabledWorldNames() {
-
 		// create empty set of string for return
 		Set<String> resultCollection = new HashSet<>();
 
@@ -275,8 +274,7 @@ public final class WorldManager {
 				worldName = mvWorld.getAlias();
 			}
 		}
-
-		// return the bukkit world name or Multiverse world alias
+		// return the world name or Multiverse alias
 		return worldName;
 	}
 
@@ -461,8 +459,8 @@ public final class WorldManager {
 	 * get world spawn location for entity, preferring Multiverse spawn location if available
 	 *
 	 * @param entity entity to retrieve world spawn location
-	 * @return world spawn location
-	 * @throws NullPointerException if passed entity is null
+	 * @return {@code Location} the spawn location of the world
+	 * @throws IllegalArgumentException if passed entity is null
 	 */
 	public Location getSpawnLocation(final Entity entity) {
 
