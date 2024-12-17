@@ -380,25 +380,16 @@ public final class WorldManager {
 		// get world from location
 		World world = location.getWorld();
 
-		// get worldName from world, or default to servers first world name if world is null
-		String worldName;
-
-		if (world != null) {
-			worldName = world.getName();
-		}
-		else {
-			worldName = plugin.getServer().getWorlds().getFirst().getName();
-		}
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			// get MultiverseWorld object
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
+		// if world is null, attempt to retrieve first world from server
+		if (world == null) {
+			if (plugin.getServer().getWorlds().isEmpty()) {
+				throw new RuntimeException("the server has no worlds!");
+			}
+			else {
+				world = plugin.getServer().getWorlds().getFirst();
+			}
+			if (world == null) {
+				throw new RuntimeException("the server returned a null world!");
 			}
 		}
 		// return the bukkit world name or Multiverse world alias
