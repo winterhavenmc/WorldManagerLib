@@ -399,15 +399,6 @@ public class WorldManagerTests {
 		when(mockMultiversePlugin.isEnabled()).thenReturn(true);
 	}
 
-	// return an array of list of string
-//	private static List<String>[] enabledWorldsListProvider() {
-//		List<String> list1 = Collections.emptyList();
-//		List<String> list2 = List.of("world", "nonexistent_world");
-//		List<List<String>> listOfLists = List.of(list1, list2);
-//		return listOfLists.toArray();
-//	}
-
-
 	@SuppressWarnings("unused")
 	enum EnabledWorldList {
 		EMPTY(),
