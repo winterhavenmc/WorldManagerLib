@@ -22,7 +22,9 @@ import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -31,7 +33,6 @@ import java.util.*;
 @SuppressWarnings("unused")
 public final class WorldManager {
 
-	public static final String UNKNOWN_WORLD_STRING = "unknown";
 	// reference to main class
 	private final Plugin plugin;
 
