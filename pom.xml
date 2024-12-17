@@ -116,13 +116,15 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- Unit Testing Dependencies -->
+		<!-- JUnit testing framework -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.11.3</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- JUnit parameterized testing -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-params</artifactId>
@@ -142,6 +144,13 @@
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
 			<version>1.15.10</version>
+		</dependency>
+
+		<!-- JetBrains annotations -->
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>26.0.1</version>
 		</dependency>
 	</dependencies>
 
