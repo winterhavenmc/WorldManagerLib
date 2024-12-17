@@ -41,57 +41,14 @@ public class WorldManagerTests {
 
 	private WorldManager worldManager;
 
-	private void setupMockPluginLogger(final Plugin plugin) {
-		when(plugin.getLogger()).thenReturn(Logger.getLogger(this.getClass().getName()));
-	}
 
 	@BeforeEach
 	public void setUp() {
-
 		setupMockPluginLogger(mockPlugin);
-
-		// return responses for mock worlds
-		when(mockWorld[0].getName()).thenReturn("world");
-		when(mockWorld[0].getUID()).thenReturn(mockWorld0UUID);
-		when(mockWorld[0].getSpawnLocation()).thenReturn(new Location(mockWorld[0], 0.0, 0.0, 0.0));
-
-		when(mockWorld[1].getName()).thenReturn("nether");
-		when(mockWorld[1].getUID()).thenReturn(mockWorld1UUID);
-		when(mockWorld[1].getSpawnLocation()).thenReturn(new Location(mockWorld[1], 0.0, 0.0, 0.0));
-
-		when(mockWorld[2].getName()).thenReturn("the_end");
-		when(mockWorld[2].getUID()).thenReturn(mockWorld2UUID);
-		when(mockWorld[2].getSpawnLocation()).thenReturn(new Location(mockWorld[2], 0.0, 0.0, 0.0));
-
-		// return mock server
-		when(mockPlugin.getServer()).thenReturn(mockServer);
-
-		// return responses for the mock server
-		when(mockServer.getWorlds()).thenReturn(List.of(mockWorld));
-		when(mockServer.getWorld("world")).thenReturn(mockWorld[0]);
-		when(mockServer.getWorld("nether")).thenReturn(mockWorld[1]);
-		when(mockServer.getWorld("the_end")).thenReturn(mockWorld[2]);
-		when(mockServer.getWorld(mockWorld0UUID)).thenReturn(mockWorld[0]);
-		when(mockServer.getWorld(mockWorld1UUID)).thenReturn(mockWorld[1]);
-		when(mockServer.getWorld(mockWorld2UUID)).thenReturn(mockWorld[2]);
-
-		// return mock plugin manager
-		when(mockServer.getPluginManager()).thenReturn(mockPluginManager);
-
-		// return null for plugin manager when queried for MultiVerse
-		when(mockPluginManager.getPlugin("Multiverse-Core")).thenReturn(null);
-
-		// return mock configuration
-		when(mockPlugin.getConfig()).thenReturn(mockConfiguration);
-
-		// return defaults for config string lists (empty list for enabled-worlds, two nonexistent world names for disabled-worlds)
-		when(mockConfiguration.getStringList(ENABLED_WORLDS_CONFIG_KEY)).thenReturn(Collections.emptyList());
-		when(mockConfiguration.getStringList(DISABLED_WORLDS_CONFIG_KEY)).thenReturn(List.of("disabled_world1", "disabled_world2"));
-
-		when(mockPlayer.getName()).thenReturn("player1");
-		when(mockPlayer.getUniqueId()).thenReturn(mockPlayerUUID);
-		when(mockPlayer.getWorld()).thenReturn(mockWorld[0]);
-		when(mockPlayer.getLocation()).thenReturn(new Location(mockWorld[0], 3.0, 4.0, 5.0));
+		setupMockWorlds();
+		setupMockConfiguration();
+		setupMockPlayer();
+		setupMockServer();
 
 		// create a world manager instance by injecting mock plugin
 		worldManager = new WorldManager(mockPlugin);
@@ -442,15 +399,6 @@ public class WorldManagerTests {
 		when(mockMultiversePlugin.isEnabled()).thenReturn(true);
 	}
 
-	// return an array of list of string
-//	private static List<String>[] enabledWorldsListProvider() {
-//		List<String> list1 = Collections.emptyList();
-//		List<String> list2 = List.of("world", "nonexistent_world");
-//		List<List<String>> listOfLists = List.of(list1, list2);
-//		return listOfLists.toArray();
-//	}
-
-
 	@SuppressWarnings("unused")
 	enum EnabledWorldList {
 		EMPTY(),
@@ -468,6 +416,57 @@ public class WorldManagerTests {
 		List<String> getList() {
 			return Collections.emptyList();
 		}
+	}
+
+
+	private void setupMockPluginLogger(final Plugin plugin) {
+		when(plugin.getLogger()).thenReturn(Logger.getLogger(this.getClass().getName()));
+	}
+
+	private void setupMockWorlds() {
+		// return responses for mock worlds
+		when(mockWorld[0].getName()).thenReturn("world");
+		when(mockWorld[0].getUID()).thenReturn(mockWorld0UUID);
+		when(mockWorld[0].getSpawnLocation()).thenReturn(new Location(mockWorld[0], 0.0, 0.0, 0.0));
+
+		when(mockWorld[1].getName()).thenReturn("nether");
+		when(mockWorld[1].getUID()).thenReturn(mockWorld1UUID);
+		when(mockWorld[1].getSpawnLocation()).thenReturn(new Location(mockWorld[1], 0.0, 0.0, 0.0));
+
+		when(mockWorld[2].getName()).thenReturn("the_end");
+		when(mockWorld[2].getUID()).thenReturn(mockWorld2UUID);
+		when(mockWorld[2].getSpawnLocation()).thenReturn(new Location(mockWorld[2], 0.0, 0.0, 0.0));
+
+		// return responses for the mock server
+		when(mockServer.getWorlds()).thenReturn(List.of(mockWorld));
+		when(mockServer.getWorld("world")).thenReturn(mockWorld[0]);
+		when(mockServer.getWorld("nether")).thenReturn(mockWorld[1]);
+		when(mockServer.getWorld("the_end")).thenReturn(mockWorld[2]);
+		when(mockServer.getWorld(mockWorld0UUID)).thenReturn(mockWorld[0]);
+		when(mockServer.getWorld(mockWorld1UUID)).thenReturn(mockWorld[1]);
+		when(mockServer.getWorld(mockWorld2UUID)).thenReturn(mockWorld[2]);
+	}
+
+	private void setupMockConfiguration() {
+		// return mock configuration
+		when(mockPlugin.getConfig()).thenReturn(mockConfiguration);
+
+		// return defaults for config string lists (empty list for enabled-worlds, two nonexistent world names for disabled-worlds)
+		when(mockConfiguration.getStringList(ENABLED_WORLDS_CONFIG_KEY)).thenReturn(Collections.emptyList());
+		when(mockConfiguration.getStringList(DISABLED_WORLDS_CONFIG_KEY)).thenReturn(List.of("disabled_world1", "disabled_world2"));
+	}
+
+	private void setupMockPlayer() {
+		when(mockPlayer.getName()).thenReturn("player1");
+		when(mockPlayer.getUniqueId()).thenReturn(mockPlayerUUID);
+		when(mockPlayer.getWorld()).thenReturn(mockWorld[0]);
+		when(mockPlayer.getLocation()).thenReturn(new Location(mockWorld[0], 3.0, 4.0, 5.0));
+	}
+
+	private void setupMockServer() {
+		when(mockPlugin.getServer()).thenReturn(mockServer);
+		when(mockServer.getPluginManager()).thenReturn(mockPluginManager);
+		when(mockPluginManager.getPlugin("Multiverse-Core")).thenReturn(null);
 	}
 
 }
