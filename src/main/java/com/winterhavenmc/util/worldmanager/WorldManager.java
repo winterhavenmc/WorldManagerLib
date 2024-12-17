@@ -26,6 +26,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 
@@ -445,14 +446,30 @@ public final class WorldManager {
 	}
 
 
+	/**
+	 * get the current size of the registry. used for testing
+	 * @return {@code int} the size of the registry
+	 */
+	@Contract(pure = true)
 	int size() {
 		return this.enabledWorldRegistry.size();
 	}
 
+	/**
+	 * check if uuid is present in the registry
+	 * @param uuid the uuid of a world
+	 * @return {@code boolean} true if the world uuid is present in the registry, or false if not
+	 */
+	@Contract(pure = true)
 	boolean contains(final UUID uuid) {
 		return this.enabledWorldRegistry.contains(uuid);
 	}
 
+	/**
+	 * get List of String of world names of the worlds with uuids in the registry
+	 * @return List of String of names of all worlds whose uuids are present in the registry
+	 */
+	@Contract(pure = true)
 	List<String> peek() {
 		return this.enabledWorldRegistry.stream().map(UUID::toString).toList();
 	}
