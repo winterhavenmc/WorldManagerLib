@@ -22,7 +22,9 @@ import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -42,6 +44,9 @@ public final class WorldManager {
 
 	private final static String ENABLED_WORLDS_KEY = "enabled-worlds";
 	private final static String DISABLED_WORLDS_KEY = "disabled-worlds";
+	public static final String UNKNOWN_WORLD = "unknown";
+	public static final String CONSOLE_SENDER = "console";
+
 
 	/**
 	 * Class constructor
@@ -69,55 +74,93 @@ public final class WorldManager {
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public void reload() {
-
-		// clear enabledWorldUIDs field
+		// remove all worlds from registry
 		this.enabledWorldRegistry.clear();
 
-		// if config list of enabled worlds is empty, add all server worlds
+		// if server.getWorlds() is empty, return without adding any worlds to registry and log warning
+		if (plugin.getServer().getWorlds().stream().map(WorldInfo::getName).toList().isEmpty()) {
+			plugin.getLogger().warning("the server has no worlds.");
+			return;
+		}
+
+		// if config list of enabled worlds is empty, add all server worlds to registry
 		if (plugin.getConfig().getStringList(ENABLED_WORLDS_KEY).isEmpty()) {
-
-			// iterate through all server worlds
-			for (World world : plugin.getServer().getWorlds()) {
-				// add world UID to collection if it is not already in list
-				this.enabledWorldRegistry.add(world.getUID());
-			}
+			addAllServerWorlds();
 		}
-		// otherwise, add only the worlds in the config enabled worlds list
+		// otherwise, add only the worlds in the config enabled worlds list that are also server worlds
 		else {
-			// iterate through config list of enabled worlds, and add valid world UIDs to field
-			for (String worldName : plugin.getConfig().getStringList(ENABLED_WORLDS_KEY)) {
-
-				// get world by name
-				World world = plugin.getServer().getWorld(worldName);
-
-				// add world UID to field if it is not already in list and world exists
-				if (world != null && !this.enabledWorldRegistry.contains(world.getUID())) {
-					this.enabledWorldRegistry.add(world.getUID());
-				}
-			}
+			addAllEnabledConfigWorlds();
 		}
 
-		// remove config list of disabled worlds from enabledWorldUIDs field
-		for (String worldName : plugin.getConfig().getStringList(DISABLED_WORLDS_KEY)) {
-
-			// get world by name
-			World world = plugin.getServer().getWorld(worldName);
-
-			// if world is not null remove UID from list
-			if (world != null) {
-				this.enabledWorldRegistry.remove(world.getUID());
-			}
-		}
+		// remove all disabled worlds from registry
+		removeAllDisabledConfigWorlds();
 	}
 
 
 	/**
-	 * get list of enabled world names from plugin config.yml file
+	 * Reload helper method adds all server worlds to the registry
+	 */
+	@SuppressWarnings("UnusedReturnValue")
+	private int addAllServerWorlds() {
+		int count = 0;
+		for (World world : plugin.getServer().getWorlds()) {
+			if (world != null) {
+				this.enabledWorldRegistry.add(world.getUID());
+				count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Reload helper method adds all worlds to registry whose names are
+	 * contained in the config enabled-worlds string list and are also current server worlds
+	 */
+	@SuppressWarnings("UnusedReturnValue")
+	private int addAllEnabledConfigWorlds() {
+		int count = 0;
+		// iterate through config list of enabled worlds, and add valid world UIDs to registry
+		for (String worldName : plugin.getConfig().getStringList(ENABLED_WORLDS_KEY)) {
+			// get world by name
+			World world = plugin.getServer().getWorld(worldName);
+			// add world UID to field if it is not already in list and world exists
+			if (world != null) {
+				this.enabledWorldRegistry.add(world.getUID());
+				count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Reload helper method removes all worlds from registry whose names are
+	 * contained in the config disabled-worlds string list
+	 */
+	@SuppressWarnings("UnusedReturnValue")
+	private int removeAllDisabledConfigWorlds() {
+		int count = 0;
+		// remove config list of disabled worlds from enabledWorldUIDs field
+		for (String worldName : plugin.getConfig().getStringList(DISABLED_WORLDS_KEY)) {
+			// get world by name
+			World world = plugin.getServer().getWorld(worldName);
+			// if world is not null remove UID from list
+			if (world != null) {
+				this.enabledWorldRegistry.remove(world.getUID());
+				count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * get collection of enabled world names from registry
 	 *
 	 * @return a Collection of String containing enabled world names
 	 */
 	public Collection<String> getEnabledWorldNames() {
-
 		// create empty set of string for return
 		Set<String> resultCollection = new HashSet<>();
 
@@ -214,12 +257,18 @@ public final class WorldManager {
 		// get world
 		World world = plugin.getServer().getWorld(worldUID);
 
-		// if world is null, return null
+		// if world is null, return unknown world string
 		if (world == null) {
-			return null;
+			return UNKNOWN_WORLD;
 		}
 
-		// get bukkit world name
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
+	}
+
+
+	private String getAliasOrName(final World world) {
+
 		String worldName = world.getName();
 
 		// if Multiverse is enabled, get MultiverseWorld object
@@ -232,8 +281,7 @@ public final class WorldManager {
 				worldName = mvWorld.getAlias();
 			}
 		}
-
-		// return the bukkit world name or Multiverse world alias
+		// return the world name or Multiverse alias
 		return worldName;
 	}
 
@@ -251,23 +299,8 @@ public final class WorldManager {
 		if (world == null) {
 			throw new IllegalArgumentException("The argument passed is null; a valid World is required.");
 		}
-
-		// get bukkit world name
-		String worldName = world.getName();
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
-		}
-
-		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
 	}
 
 
@@ -281,7 +314,7 @@ public final class WorldManager {
 
 		// if passedName is null or blank, return empty string
 		if (passedName == null || passedName.isBlank()) {
-			return "";
+			return UNKNOWN_WORLD;
 		}
 
 		// get world
@@ -289,26 +322,10 @@ public final class WorldManager {
 
 		// if world is null, return null
 		if (world == null) {
-			return null;
+			return UNKNOWN_WORLD;
 		}
-
-		// get bukkit world name
-		String worldName = world.getName();
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			// get MultiverseWorld object
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
-		}
-
-		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
 	}
 
 
@@ -326,28 +343,23 @@ public final class WorldManager {
 			throw new IllegalArgumentException("The argument passed is null; a valid CommandSender is required.");
 		}
 
+		// if server has no worlds, return CONSOLE_SENDER as world name
+		if (plugin.getServer().getWorlds().isEmpty()) {
+			plugin.getLogger().warning("The server has no enabled worlds.");
+			return CONSOLE_SENDER;
+		}
+
+		// get first server world
 		World world = plugin.getServer().getWorlds().getFirst();
 
 		if (sender instanceof Entity) {
 			world = ((Entity) sender).getWorld();
 		}
-
-		String worldName = world.getName();
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			// get MultiverseWorld object
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
+		else if (sender instanceof ConsoleCommandSender) {
+			return CONSOLE_SENDER;
 		}
-
-		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
 	}
 
 
@@ -368,30 +380,20 @@ public final class WorldManager {
 		// get world from location
 		World world = location.getWorld();
 
-		// get worldName from world, or default to servers first world name if world is null
-		String worldName;
-
-		if (world != null) {
-			worldName = world.getName();
-		}
-		else {
-			worldName = plugin.getServer().getWorlds().getFirst().getName();
-		}
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			// get MultiverseWorld object
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
+		// if world is null, attempt to retrieve first world from server
+		if (world == null) {
+			if (plugin.getServer().getWorlds().isEmpty()) {
+				throw new RuntimeException("the server has no worlds!");
+			}
+			else {
+				world = plugin.getServer().getWorlds().getFirst();
+			}
+			if (world == null) {
+				throw new RuntimeException("the server returned a null world!");
 			}
 		}
-
 		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		return getAliasOrName(world);
 	}
 
 
@@ -403,17 +405,24 @@ public final class WorldManager {
 	 * @throws NullPointerException if passed world is null
 	 */
 	public Location getSpawnLocation(final World world) {
-
 		// passed world must be non-null
 		if (world == null) {
-			throw new IllegalArgumentException("The argument is null; a valid World is required.");
+			throw new IllegalArgumentException("the world is null.");
 		}
+		return getMVSpawnLocation(world);
+	}
 
+
+	/**
+	 * attempt to use the Multiverse world spawn location if available
+	 * @param world the world whose spawn location is to be retrieved
+	 * @return {@code Location} the spawn location of the world
+	 */
+	private Location getMVSpawnLocation(World world) {
 		// if Multiverse is enabled, return Multiverse world spawn location
 		if (mvCore != null && mvCore.isEnabled()) {
 			return mvCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
 		}
-
 		// return bukkit world spawn location
 		return world.getSpawnLocation();
 	}
@@ -423,23 +432,29 @@ public final class WorldManager {
 	 * get world spawn location for entity, preferring Multiverse spawn location if available
 	 *
 	 * @param entity entity to retrieve world spawn location
-	 * @return world spawn location
-	 * @throws NullPointerException if passed entity is null
+	 * @return {@code Location} the spawn location of the world
+	 * @throws IllegalArgumentException if passed entity is null
 	 */
 	public Location getSpawnLocation(final Entity entity) {
-
 		// passed entity must be non-null
 		if (entity == null) {
-			throw new IllegalArgumentException("The argument passed is null; a valid Entity is required.");
+			throw new IllegalArgumentException("the entity is null.");
 		}
-
 		// if Multiverse is enabled, return Multiverse world spawn location
-		if (mvCore != null && mvCore.isEnabled()) {
-			return mvCore.getMVWorldManager().getMVWorld(entity.getWorld()).getSpawnLocation();
-		}
+		return getMVSpawnLocation(entity.getWorld());
+	}
 
-		// return bukkit world spawn location
-		return entity.getWorld().getSpawnLocation();
+
+	int size() {
+		return this.enabledWorldRegistry.size();
+	}
+
+	boolean contains(final UUID uuid) {
+		return this.enabledWorldRegistry.contains(uuid);
+	}
+
+	List<String> peek() {
+		return this.enabledWorldRegistry.stream().map(UUID::toString).toList();
 	}
 
 }
