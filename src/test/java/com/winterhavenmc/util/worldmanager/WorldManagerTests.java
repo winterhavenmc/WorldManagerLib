@@ -165,6 +165,30 @@ public class WorldManagerTests {
 		}
 
 		@Test
+		void getWorldNameTest_by_location_world_null() {
+			Location location = new Location(null, 0.0, 0.0, 0.0);
+			assertEquals("world", worldManager.getWorldName(location));
+		}
+
+		@Test
+		void getWorldNameTest_by_location_world_null_and_server_returns_none() {
+			when(mockServer.getWorlds()).thenReturn(Collections.emptyList());
+			Location location = new Location(null, 0.0, 0.0, 0.0);
+			assertThrows(IllegalStateException.class, () -> worldManager.getWorldName(location));
+			verify(mockServer, atLeastOnce()).getWorlds();
+		}
+
+		@Disabled
+		@Test
+		void getWorldNameTest_by_location_world_null_and_server_returns_null_world() {
+			when(mockServer.getWorld("world")).thenReturn(null);
+			when(mockServer.getWorld(mockWorld0UUID)).thenReturn(null);
+			Location location = new Location(null, 0.0, 0.0, 0.0);
+			assertThrows(IllegalStateException.class, () -> worldManager.getWorldName(location));
+			verify(mockServer, atLeastOnce()).getWorld(mockWorld0UUID);
+		}
+
+		@Test
 		@DisplayName("get world name by null location")
 		void getWorldNameTest_by_location_null() {
 			assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((Location) null));
@@ -391,6 +415,13 @@ public class WorldManagerTests {
 
 		verify(mockServer, atLeast(2)).getWorlds();
 		verify(mockConfiguration, atLeastOnce()).getStringList(ENABLED_WORLDS_CONFIG_KEY);
+	}
+
+	// 	boolean contains(final UUID uuid) {
+	@Test
+	void containsTest() {
+		assertTrue(worldManager.contains(mockWorld0UUID), "the registry does not contain the world 'world'.");
+		assertFalse(worldManager.contains(mockPlayerUUID), "the registry contains a uuid that is not for a known world.");
 	}
 
 	void multiverseTest() {
