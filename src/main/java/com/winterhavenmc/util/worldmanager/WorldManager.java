@@ -405,17 +405,24 @@ public final class WorldManager {
 	 * @throws NullPointerException if passed world is null
 	 */
 	public Location getSpawnLocation(final World world) {
-
 		// passed world must be non-null
 		if (world == null) {
-			throw new IllegalArgumentException("The argument is null; a valid World is required.");
+			throw new IllegalArgumentException("the world is null.");
 		}
+		return getMVSpawnLocation(world);
+	}
 
+
+	/**
+	 * attempt to use the Multiverse world spawn location if available
+	 * @param world the world whose spawn location is to be retrieved
+	 * @return {@code Location} the spawn location of the world
+	 */
+	private Location getMVSpawnLocation(World world) {
 		// if Multiverse is enabled, return Multiverse world spawn location
 		if (mvCore != null && mvCore.isEnabled()) {
 			return mvCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
 		}
-
 		// return bukkit world spawn location
 		return world.getSpawnLocation();
 	}
@@ -429,19 +436,12 @@ public final class WorldManager {
 	 * @throws IllegalArgumentException if passed entity is null
 	 */
 	public Location getSpawnLocation(final Entity entity) {
-
 		// passed entity must be non-null
 		if (entity == null) {
-			throw new IllegalArgumentException("The argument passed is null; a valid Entity is required.");
+			throw new IllegalArgumentException("the entity is null.");
 		}
-
 		// if Multiverse is enabled, return Multiverse world spawn location
-		if (mvCore != null && mvCore.isEnabled()) {
-			return mvCore.getMVWorldManager().getMVWorld(entity.getWorld()).getSpawnLocation();
-		}
-
-		// return bukkit world spawn location
-		return entity.getWorld().getSpawnLocation();
+		return getMVSpawnLocation(entity.getWorld());
 	}
 
 }
