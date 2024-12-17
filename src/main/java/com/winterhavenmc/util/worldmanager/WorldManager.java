@@ -43,6 +43,9 @@ public final class WorldManager {
 
 	private final static String ENABLED_WORLDS_KEY = "enabled-worlds";
 	private final static String DISABLED_WORLDS_KEY = "disabled-worlds";
+	public static final String UNKNOWN_WORLD = "unknown";
+	public static final String CONSOLE_SENDER = "console";
+
 
 	/**
 	 * Class constructor
@@ -217,7 +220,7 @@ public final class WorldManager {
 
 		// if world is null, return unknown world string
 		if (world == null) {
-			return UNKNOWN_WORLD_STRING;
+			return UNKNOWN_WORLD;
 		}
 
 		// get bukkit world name
@@ -282,7 +285,7 @@ public final class WorldManager {
 
 		// if passedName is null or blank, return empty string
 		if (passedName == null || passedName.isBlank()) {
-			return UNKNOWN_WORLD_STRING;
+			return UNKNOWN_WORLD;
 		}
 
 		// get world
@@ -290,7 +293,7 @@ public final class WorldManager {
 
 		// if world is null, return null
 		if (world == null) {
-			return UNKNOWN_WORLD_STRING;
+			return UNKNOWN_WORLD;
 		}
 
 		// get bukkit world name
@@ -327,28 +330,23 @@ public final class WorldManager {
 			throw new IllegalArgumentException("The argument passed is null; a valid CommandSender is required.");
 		}
 
+		// if server has no worlds, return CONSOLE_SENDER as world name
+		if (plugin.getServer().getWorlds().isEmpty()) {
+			plugin.getLogger().warning("The server has no enabled worlds.");
+			return CONSOLE_SENDER;
+		}
+
+		// get first server world
 		World world = plugin.getServer().getWorlds().getFirst();
 
 		if (sender instanceof Entity) {
 			world = ((Entity) sender).getWorld();
 		}
-
-		String worldName = world.getName();
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			// get MultiverseWorld object
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
+		else if (sender instanceof ConsoleCommandSender) {
+			return CONSOLE_SENDER;
 		}
-
-		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
 	}
 
 
