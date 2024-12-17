@@ -375,7 +375,7 @@ public final class WorldManager {
 
 		// passed location must be non-null
 		if (location == null) {
-			throw new IllegalArgumentException("The argument passed is null; a valid Location is required.");
+			throw new IllegalArgumentException("the location is null.");
 		}
 
 		// get world from location
@@ -384,13 +384,13 @@ public final class WorldManager {
 		// if world is null, attempt to retrieve first world from server
 		if (world == null) {
 			if (plugin.getServer().getWorlds().isEmpty()) {
-				throw new RuntimeException("the server has no worlds!");
+				throw new IllegalStateException("the server has no worlds!");
 			}
 			else {
 				world = plugin.getServer().getWorlds().getFirst();
 			}
 			if (world == null) {
-				throw new RuntimeException("the server returned a null world!");
+				throw new IllegalStateException("the server returned a null world!");
 			}
 		}
 		// return the bukkit world name or Multiverse world alias
