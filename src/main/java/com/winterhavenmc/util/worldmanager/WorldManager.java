@@ -262,7 +262,13 @@ public final class WorldManager {
 			return UNKNOWN_WORLD;
 		}
 
-		// get bukkit world name
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
+	}
+
+
+	private String getAliasOrName(final World world) {
+
 		String worldName = world.getName();
 
 		// if Multiverse is enabled, get MultiverseWorld object
@@ -293,23 +299,8 @@ public final class WorldManager {
 		if (world == null) {
 			throw new IllegalArgumentException("The argument passed is null; a valid World is required.");
 		}
-
-		// get bukkit world name
-		String worldName = world.getName();
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
-		}
-
-		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
 	}
 
 
@@ -333,24 +324,8 @@ public final class WorldManager {
 		if (world == null) {
 			return UNKNOWN_WORLD;
 		}
-
-		// get bukkit world name
-		String worldName = world.getName();
-
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			// get MultiverseWorld object
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
-		}
-
-		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		// return the world name or Multiverse alias
+		return getAliasOrName(world);
 	}
 
 
@@ -426,9 +401,8 @@ public final class WorldManager {
 				worldName = mvWorld.getAlias();
 			}
 		}
-
 		// return the bukkit world name or Multiverse world alias
-		return worldName;
+		return getAliasOrName(world);
 	}
 
 
