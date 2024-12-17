@@ -73,45 +73,84 @@ public final class WorldManager {
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public void reload() {
-
-		// clear enabledWorldUIDs field
+		// remove all worlds from registry
 		this.enabledWorldRegistry.clear();
 
-		// if config list of enabled worlds is empty, add all server worlds
+		// if server.getWorlds() is empty, return without adding any worlds to registry and log warning
+		if (plugin.getServer().getWorlds().stream().map(WorldInfo::getName).toList().isEmpty()) {
+			plugin.getLogger().warning("the server has no worlds.");
+			return;
+		}
+
+		// if config list of enabled worlds is empty, add all server worlds to registry
 		if (plugin.getConfig().getStringList(ENABLED_WORLDS_KEY).isEmpty()) {
-
-			// iterate through all server worlds
-			for (World world : plugin.getServer().getWorlds()) {
-				// add world UID to collection if it is not already in list
-				this.enabledWorldRegistry.add(world.getUID());
-			}
+			addAllServerWorlds();
 		}
-		// otherwise, add only the worlds in the config enabled worlds list
+		// otherwise, add only the worlds in the config enabled worlds list that are also server worlds
 		else {
-			// iterate through config list of enabled worlds, and add valid world UIDs to field
-			for (String worldName : plugin.getConfig().getStringList(ENABLED_WORLDS_KEY)) {
-
-				// get world by name
-				World world = plugin.getServer().getWorld(worldName);
-
-				// add world UID to field if it is not already in list and world exists
-				if (world != null && !this.enabledWorldRegistry.contains(world.getUID())) {
-					this.enabledWorldRegistry.add(world.getUID());
-				}
-			}
+			addAllEnabledConfigWorlds();
 		}
 
-		// remove config list of disabled worlds from enabledWorldUIDs field
-		for (String worldName : plugin.getConfig().getStringList(DISABLED_WORLDS_KEY)) {
+		// remove all disabled worlds from registry
+		removeAllDisabledConfigWorlds();
+	}
 
+
+	/**
+	 * Reload helper method adds all server worlds to the registry
+	 */
+	@SuppressWarnings("UnusedReturnValue")
+	private int addAllServerWorlds() {
+		int count = 0;
+		for (World world : plugin.getServer().getWorlds()) {
+			if (world != null) {
+				this.enabledWorldRegistry.add(world.getUID());
+				count++;
+			}
+		}
+		return count;
+	}
+
+
+	/**
+	 * Reload helper method adds all worlds to registry whose names are
+	 * contained in the config enabled-worlds string list and are also current server worlds
+	 */
+	@SuppressWarnings("UnusedReturnValue")
+	private int addAllEnabledConfigWorlds() {
+		int count = 0;
+		// iterate through config list of enabled worlds, and add valid world UIDs to registry
+		for (String worldName : plugin.getConfig().getStringList(ENABLED_WORLDS_KEY)) {
 			// get world by name
 			World world = plugin.getServer().getWorld(worldName);
+			// add world UID to field if it is not already in list and world exists
+			if (world != null) {
+				this.enabledWorldRegistry.add(world.getUID());
+				count++;
+			}
+		}
+		return count;
+	}
 
+
+	/**
+	 * Reload helper method removes all worlds from registry whose names are
+	 * contained in the config disabled-worlds string list
+	 */
+	@SuppressWarnings("UnusedReturnValue")
+	private int removeAllDisabledConfigWorlds() {
+		int count = 0;
+		// remove config list of disabled worlds from enabledWorldUIDs field
+		for (String worldName : plugin.getConfig().getStringList(DISABLED_WORLDS_KEY)) {
+			// get world by name
+			World world = plugin.getServer().getWorld(worldName);
 			// if world is not null remove UID from list
 			if (world != null) {
 				this.enabledWorldRegistry.remove(world.getUID());
+				count++;
 			}
 		}
+		return count;
 	}
 
 
