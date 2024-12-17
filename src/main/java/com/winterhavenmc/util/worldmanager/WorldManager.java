@@ -31,6 +31,7 @@ import java.util.*;
 @SuppressWarnings("unused")
 public final class WorldManager {
 
+	public static final String UNKNOWN_WORLD_STRING = "unknown";
 	// reference to main class
 	private final Plugin plugin;
 
@@ -214,9 +215,9 @@ public final class WorldManager {
 		// get world
 		World world = plugin.getServer().getWorld(worldUID);
 
-		// if world is null, return null
+		// if world is null, return unknown world string
 		if (world == null) {
-			return null;
+			return UNKNOWN_WORLD_STRING;
 		}
 
 		// get bukkit world name
@@ -281,7 +282,7 @@ public final class WorldManager {
 
 		// if passedName is null or blank, return empty string
 		if (passedName == null || passedName.isBlank()) {
-			return "";
+			return UNKNOWN_WORLD_STRING;
 		}
 
 		// get world
@@ -289,7 +290,7 @@ public final class WorldManager {
 
 		// if world is null, return null
 		if (world == null) {
-			return null;
+			return UNKNOWN_WORLD_STRING;
 		}
 
 		// get bukkit world name
