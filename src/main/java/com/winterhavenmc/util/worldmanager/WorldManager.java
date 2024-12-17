@@ -444,4 +444,17 @@ public final class WorldManager {
 		return getMVSpawnLocation(entity.getWorld());
 	}
 
+
+	int size() {
+		return this.enabledWorldRegistry.size();
+	}
+
+	boolean contains(final UUID uuid) {
+		return this.enabledWorldRegistry.contains(uuid);
+	}
+
+	List<String> peek() {
+		return this.enabledWorldRegistry.stream().map(UUID::toString).toList();
+	}
+
 }
