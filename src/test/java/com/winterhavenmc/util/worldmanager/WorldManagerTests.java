@@ -1,6 +1,5 @@
 package com.winterhavenmc.util.worldmanager;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -439,11 +438,11 @@ public class WorldManagerTests {
 		assertFalse(worldManager.contains(mockPlayerUUID), "the registry contains a uuid that is not for a known world.");
 	}
 
-	void multiverseTest() {
-		MultiverseCore mockMultiversePlugin = mock(MultiverseCore.class);
-		when(mockPluginManager.getPlugin("Multiverse-Core")).thenReturn(mockMultiversePlugin);
-		when(mockMultiversePlugin.isEnabled()).thenReturn(true);
-	}
+//	void multiverseTest() {
+//		MultiverseCore mockMultiversePlugin = mock(MultiverseCore.class);
+//		when(mockPluginManager.getPlugin("Multiverse-Core")).thenReturn(mockMultiversePlugin);
+//		when(mockMultiversePlugin.isEnabled()).thenReturn(true);
+//	}
 
 	@SuppressWarnings("unused")
 	enum EnabledWorldList {
