@@ -17,8 +17,6 @@
 
 package com.winterhavenmc.util.worldmanager;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -40,9 +38,6 @@ public final class WorldManager {
 	// collection of enabled world names
 	private final Collection<UUID> enabledWorldRegistry = new HashSet<>();
 
-	// reference to MultiverseCore
-	private final MultiverseCore mvCore;
-
 	private final static String ENABLED_WORLDS_KEY = "enabled-worlds";
 	private final static String DISABLED_WORLDS_KEY = "disabled-worlds";
 	public static final String UNKNOWN_WORLD = "unknown";
@@ -58,12 +53,6 @@ public final class WorldManager {
 
 		// set reference to main class
 		this.plugin = plugin;
-
-		// get reference to Multiverse-Core if installed
-		mvCore = (MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-Core");
-		if (mvCore != null && mvCore.isEnabled()) {
-			plugin.getLogger().info("Multiverse-Core detected.");
-		}
 
 		// populate enabled world UID list field
 		this.reload();
@@ -226,12 +215,7 @@ public final class WorldManager {
 
 		World world = plugin.getServer().getWorld(worldName);
 
-		// if world is null, return false
-		if (world == null) {
-			return false;
-		}
-
-		return this.enabledWorldRegistry.contains(world.getUID());
+		return world != null && this.enabledWorldRegistry.contains(world.getUID());
 	}
 
 
@@ -252,32 +236,29 @@ public final class WorldManager {
 
 		World world = plugin.getServer().getWorld(worldUID);
 
-		// if world is null, return unknown world string
-		if (world == null) {
-			return UNKNOWN_WORLD;
-		}
-
-		// return the world name or Multiverse alias
-		return getAliasOrName(world);
+		return (world != null)
+				? getAliasOrName(world)
+				: UNKNOWN_WORLD;
 	}
 
 
-	private String getAliasOrName(final World world) {
+	private String getAliasOrName(final World world)
+	{
+		return world.getName();
 
-		String worldName = world.getName();
+//		// if Multiverse is enabled, get MultiverseWorld object
+//		if (mvCore != null && mvCore.isEnabled()) {
+//
+//			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
+//
+//			// if Multiverse alias is not null or empty, set worldName to alias
+//			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
+//				worldName = mvWorld.getAlias();
+//			}
+//		}
 
-		// if Multiverse is enabled, get MultiverseWorld object
-		if (mvCore != null && mvCore.isEnabled()) {
-
-			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-
-			// if Multiverse alias is not null or empty, set worldName to alias
-			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-				worldName = mvWorld.getAlias();
-			}
-		}
 		// return the world name or Multiverse alias
-		return worldName;
+//		return worldName;
 	}
 
 
@@ -419,9 +400,9 @@ public final class WorldManager {
 	private Location getMVSpawnLocation(World world)
 	{
 		// if Multiverse is enabled, return Multiverse world spawn location
-		if (mvCore != null && mvCore.isEnabled()) {
-			return mvCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
-		}
+//		if (mvCore != null && mvCore.isEnabled()) {
+//			return mvCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
+//		}
 		// return bukkit world spawn location
 		return world.getSpawnLocation();
 	}
