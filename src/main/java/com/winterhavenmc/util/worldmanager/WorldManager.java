@@ -234,7 +234,7 @@ public final class WorldManager
 		// worldUID must be non-null
 		if (worldUID == null)
 		{
-			throw new IllegalArgumentException("The argument passed is null; a valid UUID is required.");
+			return UNKNOWN_WORLD;
 		}
 
 		World world = plugin.getServer().getWorld(worldUID);
@@ -274,10 +274,7 @@ public final class WorldManager
 	 */
 	public String getWorldName(final World world)
 	{
-		if (world == null)
-		{
-			throw new IllegalArgumentException("The argument passed is null; a valid World is required.");
-		}
+		if (world == null) { return UNKNOWN_WORLD; }
 
 		return getAliasOrName(world);
 	}
