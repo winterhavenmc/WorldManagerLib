@@ -30,9 +30,8 @@ import java.util.*;
 
 
 @SuppressWarnings("unused")
-public final class WorldManager {
-
-	// reference to main class
+public final class WorldManager
+{
 	private final Plugin plugin;
 
 	// collection of enabled world names
@@ -49,8 +48,8 @@ public final class WorldManager {
 	 *
 	 * @param plugin passed reference to the plugin main class
 	 */
-	public WorldManager(final Plugin plugin) {
-
+	public WorldManager(final Plugin plugin)
+	{
 		// set reference to main class
 		this.plugin = plugin;
 
@@ -82,7 +81,8 @@ public final class WorldManager {
 		}
 
 		// otherwise, add only the worlds in the config enabled worlds list that are also server worlds
-		else {
+		else
+		{
 			addAllEnabledConfigWorlds();
 		}
 
@@ -98,8 +98,10 @@ public final class WorldManager {
 	private int addAllServerWorlds()
 	{
 		int count = 0;
-		for (World world : plugin.getServer().getWorlds()) {
-			if (world != null) {
+		for (World world : plugin.getServer().getWorlds())
+		{
+			if (world != null)
+			{
 				this.enabledWorldRegistry.add(world.getUID());
 				count++;
 			}
@@ -209,7 +211,8 @@ public final class WorldManager {
 	 */
 	public boolean isEnabled(final String worldName)
 	{
-		if (worldName == null || worldName.isBlank()) {
+		if (worldName == null || worldName.isBlank())
+		{
 			return false;
 		}
 
@@ -283,18 +286,18 @@ public final class WorldManager {
 	/**
 	 * Get world name from world name string, using Multiverse alias if available
 	 *
-	 * @param passedName the bukkit world name as string
+	 * @param worldName the bukkit world name as string
 	 * @return bukkit world name or multiverse alias as String
 	 */
-	public String getWorldName(final String passedName)
+	public String getWorldName(final String worldName)
 	{
-		if (passedName == null || passedName.isBlank())
+		if (worldName == null || worldName.isBlank())
 		{
 			return UNKNOWN_WORLD;
 		}
 
 		// get world
-		World world = plugin.getServer().getWorld(passedName);
+		World world = plugin.getServer().getWorld(worldName);
 
 		// if world is null, return null
 		if (world == null)
@@ -315,26 +318,28 @@ public final class WorldManager {
 	 */
 	public String getWorldName(final CommandSender sender)
 	{
-		if (sender == null) {
+		if (sender == null)
+		{
 			throw new IllegalArgumentException("The argument passed is null; a valid CommandSender is required.");
 		}
 
-		// if server has no worlds, return CONSOLE_SENDER as world name
+		// if server has no worlds, return UNKNOWN_WORLD as world name
 		if (plugin.getServer().getWorlds().isEmpty())
 		{
 			plugin.getLogger().warning("The server has no enabled worlds.");
-			return CONSOLE_SENDER;
+			return UNKNOWN_WORLD;
 		}
 
 		// get first server world
 		World world = plugin.getServer().getWorlds().getFirst();
 
-		if (sender instanceof Entity) {
+		if (sender instanceof Entity)
+		{
 			world = ((Entity) sender).getWorld();
 		}
 		else if (sender instanceof ConsoleCommandSender)
 		{
-			return CONSOLE_SENDER;
+			return UNKNOWN_WORLD;
 		}
 
 		return getAliasOrName(world);
@@ -350,8 +355,9 @@ public final class WorldManager {
 	 */
 	public String getWorldName(final Location location)
 	{
-		if (location == null) {
-			throw new IllegalArgumentException("the location is null.");
+		if (location == null)
+		{
+			return UNKNOWN_WORLD;
 		}
 
 		World world = location.getWorld();
@@ -428,6 +434,7 @@ public final class WorldManager {
 
 	/**
 	 * get the current size of the registry. used for testing
+	 *
 	 * @return {@code int} the size of the registry
 	 */
 	@Contract(pure = true)
@@ -439,6 +446,7 @@ public final class WorldManager {
 
 	/**
 	 * check if uuid is present in the registry
+	 *
 	 * @param uuid the uuid of a world
 	 * @return {@code boolean} true if the world uuid is present in the registry, or false if not
 	 */
@@ -451,6 +459,7 @@ public final class WorldManager {
 
 	/**
 	 * get List of String of world names of the worlds with uuids in the registry
+	 *
 	 * @return List of String of names of all worlds whose uuids are present in the registry
 	 */
 	@Contract(pure = true)
