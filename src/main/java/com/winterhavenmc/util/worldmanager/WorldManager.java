@@ -424,40 +424,6 @@ public final class WorldManager
 
 
 	/**
-	 * attempt to use the Multiverse world spawn location if available
-	 * @param world the world whose spawn location is to be retrieved
-	 * @return {@code Location} the spawn location of the world
-	 */
-	private Location getMVSpawnLocation(World world)
-	{
-		// if Multiverse is enabled, return Multiverse world spawn location
-//		if (mvCore != null && mvCore.isEnabled()) {
-//			return mvCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
-//		}
-		// return bukkit world spawn location
-		return world.getSpawnLocation();
-	}
-
-
-	/**
-	 * get world spawn location for entity, preferring Multiverse spawn location if available
-	 *
-	 * @param entity entity to retrieve world spawn location
-	 * @return {@code Location} the spawn location of the world
-	 * @throws IllegalArgumentException if passed entity is null
-	 */
-	public Location getSpawnLocation(final Entity entity)
-	{
-		if (entity == null)
-		{
-			throw new IllegalArgumentException("the entity is null.");
-		}
-
-		return getMVSpawnLocation(entity.getWorld());
-	}
-
-
-	/**
 	 * get the current size of the registry. used for testing
 	 *
 	 * @return {@code int} the size of the registry
