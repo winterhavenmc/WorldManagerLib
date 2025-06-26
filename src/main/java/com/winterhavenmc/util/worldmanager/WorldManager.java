@@ -247,7 +247,10 @@ public final class WorldManager
 
 	private String getAliasOrName(final World world)
 	{
-		return world.getName();
+		if (world == null) { return UNKNOWN_WORLD; }
+
+		MultiverseCoreApi coreApi;
+		String worldName = world.getName();
 
 //		// if Multiverse is enabled, get MultiverseWorld object
 //		if (mvCore != null && mvCore.isEnabled()) {
