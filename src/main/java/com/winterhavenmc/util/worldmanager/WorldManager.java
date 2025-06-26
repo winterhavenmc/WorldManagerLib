@@ -252,16 +252,14 @@ public final class WorldManager
 		MultiverseCoreApi coreApi;
 		String worldName = world.getName();
 
-//		// if Multiverse is enabled, get MultiverseWorld object
-//		if (mvCore != null && mvCore.isEnabled()) {
-//
-//			MultiverseWorld mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-//
-//			// if Multiverse alias is not null or empty, set worldName to alias
-//			if (mvWorld != null && mvWorld.getAlias() != null && !mvWorld.getAlias().isEmpty()) {
-//				worldName = mvWorld.getAlias();
-//			}
-//		}
+		try
+		{
+			coreApi = MultiverseCoreApi.get();
+		}
+		catch (IllegalStateException exception)
+		{
+			coreApi = null;
+		}
 
 		// return the world name or Multiverse alias
 //		return worldName;
