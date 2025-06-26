@@ -39,7 +39,7 @@ public final class WorldManager
 
 	private final static String ENABLED_WORLDS_KEY = "enabled-worlds";
 	private final static String DISABLED_WORLDS_KEY = "disabled-worlds";
-	public static final String UNKNOWN_WORLD = "unknown";
+	public static final String UNKNOWN_WORLD = "\uD83C\uDF10";
 	public static final String CONSOLE_SENDER = "console";
 
 
