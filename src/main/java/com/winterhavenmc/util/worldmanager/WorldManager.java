@@ -390,8 +390,9 @@ public final class WorldManager
 	 */
 	public Location getSpawnLocation(final World world)
 	{
-		if (world == null) { throw new IllegalArgumentException("the world is null."); }
-		return getMVSpawnLocation(world);
+		if (world == null) {return null;}
+
+		return SpawnLocationResolver.get(plugin.getServer().getPluginManager()).resolve(world);
 	}
 
 
