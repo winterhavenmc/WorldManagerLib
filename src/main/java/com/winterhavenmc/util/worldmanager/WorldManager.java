@@ -24,6 +24,12 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.Plugin;
+
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.winterhavenmc.util.worldmanager.spawn.SpawnLocationResolver;
+
+import org.mvplugins.multiverse.core.MultiverseCoreApi;
+import org.mvplugins.multiverse.core.world.MultiverseWorld;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
