@@ -52,6 +52,11 @@
 					<id>spigot-repo</id>
 					<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 				</repository>
+
+				<repository>
+					<id>multiverse-repo</id>
+					<url>https://repo.onarandombox.com/content/groups/public/</url>
+				</repository>
 			</repositories>
 		</profile>
 	</profiles>
