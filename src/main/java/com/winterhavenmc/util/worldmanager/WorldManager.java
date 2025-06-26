@@ -267,8 +267,28 @@ public final class WorldManager
 			coreApi = null;
 		}
 
-		// return the world name or Multiverse alias
-//		return worldName;
+		// try to get multiverse v5 alias or name
+		if (coreApi != null)
+		{
+			MultiverseWorld mvWorld = coreApi.getWorldManager().getWorld(world).getOrNull();
+			if (mvWorld != null && mvWorld.getAliasOrName() != null && !mvWorld.getAliasOrName().isEmpty())
+			{
+				worldName = mvWorld.getAliasOrName();
+			}
+		}
+		// else try to get multiverse v4 alias
+		else
+		{
+			MultiverseCore mvCore = (MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-core");
+
+			if (mvCore != null && mvCore.getMVWorldManager() != null)
+			{
+				var mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
+				worldName = mvWorld.getAlias();
+			}
+		}
+
+		return worldName;
 	}
 
 
