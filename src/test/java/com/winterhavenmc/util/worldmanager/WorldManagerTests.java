@@ -158,7 +158,7 @@ public class WorldManagerTests
 			@DisplayName("get world name by null world object")
 			void getWorldNameTest_by_world_object_null()
 			{
-				assertEquals("NULL", worldManager.getWorldName((World) null));
+				assertEquals("\uD83C\uDF10", worldManager.getWorldName((World) null));
 			}
 		}
 
@@ -178,7 +178,7 @@ public class WorldManagerTests
 			@DisplayName("get world name by null world uuid")
 			void getWorldNameTest_by_world_uid_null()
 			{
-				assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((UUID) null));
+				assertEquals("\uD83C\uDF10", worldManager.getWorldName((UUID) null));
 			}
 
 
@@ -260,7 +260,7 @@ public class WorldManagerTests
 			{
 				when(mockServer.getWorlds()).thenReturn(Collections.emptyList());
 				assertTrue(mockServer.getWorlds().isEmpty());
-				assertEquals(CONSOLE_SENDER, worldManager.getWorldName(mockPlayer));
+				assertEquals(UNKNOWN_WORLD, worldManager.getWorldName(mockPlayer));
 				verify(mockServer, atLeast(2)).getWorlds();
 			}
 		}
