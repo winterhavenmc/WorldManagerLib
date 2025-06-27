@@ -19,9 +19,32 @@ package com.winterhavenmc.util.worldmanager.spawn;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.mockito.Mockito.when;
 
 
-public interface SpawnLocationRetriever
+@ExtendWith(MockitoExtension.class)
+class Multiverse5RetrieverTest
 {
-	Location getSpawnLocation(World world);
+	@Mock World worldMock;
+	@Mock Location locationMock;
+
+
+	@Test
+	void getSpawnLocation()
+	{
+		// Arrange
+		when(worldMock.getSpawnLocation()).thenReturn(locationMock);
+
+		// Act
+		Multiverse5Retriever retriever = new Multiverse5Retriever();
+
+		// Assert
+		retriever.getSpawnLocation(worldMock);
+	}
+
 }

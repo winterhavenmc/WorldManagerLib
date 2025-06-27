@@ -16,7 +16,6 @@ import org.junit.jupiter.params.provider.EnumSource;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static com.winterhavenmc.util.worldmanager.WorldManager.CONSOLE_SENDER;
 import static com.winterhavenmc.util.worldmanager.WorldManager.UNKNOWN_WORLD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

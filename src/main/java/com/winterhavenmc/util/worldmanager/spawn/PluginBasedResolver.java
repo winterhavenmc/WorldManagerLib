@@ -35,15 +35,12 @@ public final class PluginBasedResolver implements SpawnLocationResolver
 
 	public Location resolve(final World world)
 	{
-		if (plugin == null)
-		{
-			return world.getSpawnLocation();
-		}
+		if (world == null) { return null; }
 
 		SpawnLocationRetriever retriever = switch (plugin)
 		{
 			case com.onarandombox.MultiverseCore.MultiverseCore mvPlugin -> new Multiverse4Retriever(mvPlugin);
-			case org.mvplugins.multiverse.core.MultiverseCore mvPlugin -> new Multiverse5Retriever(mvPlugin);
+			case org.mvplugins.multiverse.core.MultiverseCore ignored -> new Multiverse5Retriever();
 			default -> new DefaultRetriever();
 		};
 

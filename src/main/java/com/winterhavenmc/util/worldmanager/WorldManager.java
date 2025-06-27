@@ -26,7 +26,6 @@ import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.Plugin;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.winterhavenmc.util.worldmanager.spawn.SpawnLocationResolver;
 
 import org.mvplugins.multiverse.core.MultiverseCoreApi;
 import org.mvplugins.multiverse.core.world.MultiverseWorld;
@@ -412,14 +411,13 @@ public final class WorldManager
 	 * get world spawn location, preferring Multiverse spawn location if available
 	 *
 	 * @param world bukkit world object to retrieve spawn location
-	 * @return spawn location
-	 * @throws NullPointerException if passed world is null
+	 * @return spawn location, or null if world is null
 	 */
 	public Location getSpawnLocation(final World world)
 	{
-		if (world == null) {return null;}
-
-		return SpawnLocationResolver.get(plugin.getServer().getPluginManager()).resolve(world);
+		return (world != null)
+				? world.getSpawnLocation()
+				: null;
 	}
 
 

@@ -17,26 +17,48 @@
 
 package com.winterhavenmc.util.worldmanager.spawn;
 
-import org.mvplugins.multiverse.core.MultiverseCore;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.mvplugins.multiverse.core.MultiverseCoreApi;
+import org.mvplugins.multiverse.core.world.MultiverseWorld;
 
 
 public class Multiverse5Retriever implements SpawnLocationRetriever
 {
-	private final MultiverseCore multiverseCore;
-
-
-	public Multiverse5Retriever(MultiverseCore plugin)
-	{
-		this.multiverseCore = plugin;
-	}
-
-
 	@Override
 	public Location getSpawnLocation(World world)
 	{
-		return multiverseCore.getApi().getWorldManager().getWorld(world).getOrNull().getSpawnLocation();
+		if (world == null) { return null; }
+
+		Location result = null;
+		MultiverseCoreApi multiverseCoreApi = null;
+		boolean success;
+
+		try
+		{
+			multiverseCoreApi = MultiverseCoreApi.get();
+			success = true;
+		}
+		catch (Exception exception)
+		{
+			result = world.getSpawnLocation();
+			success = false;
+		}
+
+		if (success)
+		{
+			MultiverseWorld multiverseWorld = multiverseCoreApi.getWorldManager().getWorld(world).getOrNull();
+			if (multiverseWorld != null)
+			{
+				result = multiverseCoreApi.getWorldManager().getWorld(world).getOrNull().getSpawnLocation();
+			}
+			else
+			{
+				result = world.getSpawnLocation();
+			}
+		}
+
+		return result;
 	}
 
 }

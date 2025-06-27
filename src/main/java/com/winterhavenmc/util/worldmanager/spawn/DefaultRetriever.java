@@ -25,7 +25,9 @@ public class DefaultRetriever implements SpawnLocationRetriever
 {
 	public Location getSpawnLocation(final World world)
 	{
-		return world.getSpawnLocation();
+		return (world != null)
+				? world.getSpawnLocation()
+				: null;
 	}
 
 }

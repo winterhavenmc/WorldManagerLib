@@ -32,7 +32,9 @@ public final class DefaultResolver implements SpawnLocationResolver
 	@Override
 	public Location resolve(final World world)
 	{
-		return world.getSpawnLocation();
+		return (world != null)
+				? world.getSpawnLocation()
+				: null;
 	}
 
 }
