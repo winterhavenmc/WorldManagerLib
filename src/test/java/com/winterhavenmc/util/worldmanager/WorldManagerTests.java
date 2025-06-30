@@ -129,7 +129,7 @@ public class WorldManagerTests
 			@Test
 			@DisplayName("get world name by null string")
 			void getWorldNameTest_by_string_null () {
-				assertEquals(UNKNOWN_WORLD, worldManager.getAliasOrName((String) null));
+				assertEquals(UNKNOWN_WORLD, worldManager.getAliasOrName(null));
 			}
 
 
@@ -163,7 +163,7 @@ public class WorldManagerTests
 			@DisplayName("get world name by null world object")
 			void getWorldNameTest_by_world_object_null()
 			{
-				assertEquals("\uD83C\uDF10", worldManager.getWorldName((World) null));
+				assertEquals("\uD83C\uDF10", worldManager.getWorldName(null));
 			}
 		}
 	}
