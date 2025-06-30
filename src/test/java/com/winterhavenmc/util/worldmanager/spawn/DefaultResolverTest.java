@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -37,22 +37,29 @@ class DefaultResolverTest
 	@Test
 	void resolve_with_valid_world_returns_world_spawn_location()
 	{
+		// Arrange
 		when(worldMock.getSpawnLocation()).thenReturn(locationMock);
-		DefaultResolver defaultResolver = new DefaultResolver();
 
+		// Act
+		DefaultResolver defaultResolver = new DefaultResolver();
 		Location result = defaultResolver.resolve(worldMock);
 
+		// Assert
 		assertEquals(locationMock, result);
+
+		// Verify
+		verify(worldMock, atLeastOnce()).getSpawnLocation();
 	}
 
 
 	@Test
 	void resolve_with_null_world_returns_null()
 	{
+		// Act
 		DefaultResolver defaultResolver = new DefaultResolver();
-
 		Location result = defaultResolver.resolve(null);
 
+		// Assert
 		assertNull(result);
 	}
 
