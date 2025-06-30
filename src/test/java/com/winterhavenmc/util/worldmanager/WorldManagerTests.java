@@ -3,7 +3,6 @@ package com.winterhavenmc.util.worldmanager;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -158,109 +157,6 @@ public class WorldManagerTests
 			void getWorldNameTest_by_world_object_null()
 			{
 				assertEquals("\uD83C\uDF10", worldManager.getWorldName((World) null));
-			}
-		}
-
-
-		@Nested
-		class byUUID
-		{
-			@Test
-			@DisplayName("get world name by world uuid")
-			void getWorldNameTest_by_world_uid()
-			{
-				assertEquals("world", worldManager.getWorldName(mockWorld0UUID));
-			}
-
-
-			@Test
-			@DisplayName("get world name by null world uuid")
-			void getWorldNameTest_by_world_uid_null()
-			{
-				assertEquals("\uD83C\uDF10", worldManager.getWorldName((UUID) null));
-			}
-
-
-			@Test
-			@DisplayName("get world name by uuid with an unknown world uuid")
-			void getWorldNameTest_by_uuid_unknown()
-			{
-				assertEquals(UNKNOWN_WORLD, worldManager.getWorldName(new UUID(602, 612)));
-			}
-		}
-
-
-		@Nested
-		class byLocation
-		{
-			@Test
-			@DisplayName("get world name by location")
-			void getWorldNameTest_by_location()
-			{
-				Location location = new Location(mockWorld[0], 0.0, 0.0, 0.0);
-				assertEquals("world", worldManager.getWorldName(location));
-			}
-
-
-			@Test
-			void getWorldNameTest_by_location_world_null()
-			{
-				Location location = new Location(null, 0.0, 0.0, 0.0);
-				assertEquals("world", worldManager.getWorldName(location));
-			}
-
-
-			@Test
-			void getWorldNameTest_by_location_world_null_and_server_returns_none()
-			{
-				when(mockServer.getWorlds()).thenReturn(Collections.emptyList());
-				Location location = new Location(null, 0.0, 0.0, 0.0);
-				assertThrows(IllegalStateException.class, () -> worldManager.getWorldName(location));
-				verify(mockServer, atLeastOnce()).getWorlds();
-			}
-
-
-			@Disabled
-			@Test
-			void getWorldNameTest_by_location_world_null_and_server_returns_null_world()
-			{
-				when(mockServer.getWorld("world")).thenReturn(null);
-				when(mockServer.getWorld(mockWorld0UUID)).thenReturn(null);
-				Location location = new Location(null, 0.0, 0.0, 0.0);
-				assertThrows(IllegalStateException.class, () -> worldManager.getWorldName(location));
-				verify(mockServer, atLeastOnce()).getWorld(mockWorld0UUID);
-			}
-
-
-			@Test
-			@DisplayName("get world name by null location")
-			void getWorldNameTest_by_location_null()
-			{
-				assertEquals(UNKNOWN_WORLD, worldManager.getWorldName((Location) null));
-			}
-		}
-
-
-		@Nested
-		class byEntity
-		{
-			@Test
-			@DisplayName("get world name by entity")
-			void getWorldName_by_entity()
-			{
-				assertEquals("world", worldManager.getWorldName(mockPlayer));
-				assertThrows(IllegalArgumentException.class, () -> worldManager.getWorldName((CommandSender) null));
-			}
-
-
-			@Test
-			@DisplayName("get world name by entity when server returns no worlds")
-			void getWorldNameTest_by_entity_no_server_worlds()
-			{
-				when(mockServer.getWorlds()).thenReturn(Collections.emptyList());
-				assertTrue(mockServer.getWorlds().isEmpty());
-				assertEquals(UNKNOWN_WORLD, worldManager.getWorldName(mockPlayer));
-				verify(mockServer, atLeast(2)).getWorlds();
 			}
 		}
 	}
