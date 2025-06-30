@@ -42,10 +42,6 @@ class PluginBasedResolverTest
 	@Mock PluginDescriptionFile mv4DescriptionMock;
 	@Mock MVWorldManager mv4WorldManagerMock;
 	@Mock MVWorld mv4WorldMock;
-	@Mock org.mvplugins.multiverse.core.MultiverseCore mv5Mock;
-	@Mock org.mvplugins.multiverse.core.MultiverseCoreApi mv5apiMock;
-	@Mock org.mvplugins.multiverse.core.world.WorldManager mv5WorldManagerMock;
-	@Mock org.mvplugins.multiverse.core.world.MultiverseWorld mv5WorldMock;
 	@Mock Location locationMock;
 
 	@Test
