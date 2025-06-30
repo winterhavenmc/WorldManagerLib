@@ -256,7 +256,7 @@ public final class WorldManager
 	 * @param worldName the bukkit world name as string
 	 * @return bukkit world name or multiverse alias as String
 	 */
-	public String getWorldName(final String worldName)
+	public String getAliasOrName(final String worldName)
 	{
 		if (worldName == null || worldName.isBlank())
 		{
