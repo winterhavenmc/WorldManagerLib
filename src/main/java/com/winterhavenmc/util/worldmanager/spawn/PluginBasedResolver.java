@@ -21,6 +21,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Optional;
+
 
 public final class PluginBasedResolver implements SpawnLocationResolver
 {
@@ -37,14 +39,26 @@ public final class PluginBasedResolver implements SpawnLocationResolver
 	{
 		if (world == null) { return null; }
 
-		SpawnLocationRetriever retriever = switch (plugin)
-		{
-			case com.onarandombox.MultiverseCore.MultiverseCore mvPlugin -> new Multiverse4Retriever(mvPlugin);
-			case org.mvplugins.multiverse.core.MultiverseCore ignored -> new Multiverse5Retriever();
-			default -> new DefaultRetriever();
-		};
+		Optional<Location> result;
 
-		return retriever.getSpawnLocation(world);
+		if (plugin != null
+				&& plugin.getDescription().getVersion().startsWith("4")
+				&& plugin instanceof com.onarandombox.MultiverseCore.MultiverseCore mvPlugin)
+		{
+			result = new Multiverse4Retriever(mvPlugin).getSpawnLocation(world);
+		}
+		else if (plugin != null
+				&& plugin.getDescription().getVersion().startsWith("5")
+				&& plugin instanceof org.mvplugins.multiverse.core.MultiverseCore)
+		{
+			result = new Multiverse5Retriever().getSpawnLocation(world);
+		}
+		else
+		{
+			result = new DefaultRetriever().getSpawnLocation(world);
+		}
+
+		return result.orElseGet(world::getSpawnLocation);
 	}
 
 }
