@@ -17,24 +17,25 @@
 
 package com.winterhavenmc.util.worldmanager.spawn;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.mvplugins.multiverse.core.MultiverseCoreApi;
 import org.mvplugins.multiverse.core.world.MultiverseWorld;
 import org.mvplugins.multiverse.core.world.WorldManager;
 import org.mvplugins.multiverse.external.vavr.control.Option;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -73,6 +74,10 @@ class Multiverse5RetrieverTest
 
 			// Assert
 			assertEquals(Optional.empty(), result);
+
+
+			// Verify
+			verify(multiverseCoreApiMock, atLeastOnce()).getWorldManager();
 		}
 	}
 
@@ -92,6 +97,10 @@ class Multiverse5RetrieverTest
 
 			// Assert
 			assertEquals(Optional.empty(), result);
+
+			// Verify
+			verify(multiverseCoreApiMock, atLeastOnce()).getWorldManager();
+			verify(worldManagerMock, atLeastOnce()).getWorld(worldMock);
 		}
 	}
 
@@ -111,8 +120,13 @@ class Multiverse5RetrieverTest
 
 			// Assert
 			assertEquals(Optional.empty(), result);
+
+			// Verify
+			verify(multiverseCoreApiMock, atLeastOnce()).getWorldManager();
+			verify(worldManagerMock, atLeastOnce()).getWorld(worldMock);
 		}
 	}
+
 
 	@Test
 	void getSpawnLocation_returns_empty_optional_when_MultiverseWorld_getSpawn_location_is_null()
@@ -131,6 +145,11 @@ class Multiverse5RetrieverTest
 
 			// Assert
 			assertEquals(Optional.empty(), result);
+
+			// Verify
+			verify(multiverseCoreApiMock, atLeastOnce()).getWorldManager();
+			verify(worldManagerMock, atLeastOnce()).getWorld(worldMock);
+			verify(multiverseWorldMock, atLeastOnce()).getSpawnLocation();
 		}
 	}
 
@@ -151,6 +170,11 @@ class Multiverse5RetrieverTest
 
 			// Assert
 			assertEquals(Optional.of(locationMock), result);
+
+			// Verify
+			verify(multiverseCoreApiMock, atLeastOnce()).getWorldManager();
+			verify(worldManagerMock, atLeastOnce()).getWorld(worldMock);
+			verify(multiverseWorldMock, atLeastOnce()).getSpawnLocation();
 		}
 	}
 
