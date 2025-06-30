@@ -227,7 +227,6 @@ public final class WorldManager
 	 *
 	 * @param world the world object to retrieve name
 	 * @return bukkit world name or multiverse alias as String
-	 * @throws NullPointerException if passed world is null
 	 */
 	public String getWorldName(final World world)
 	{
