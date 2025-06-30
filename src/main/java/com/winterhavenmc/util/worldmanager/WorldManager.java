@@ -236,6 +236,22 @@ public final class WorldManager
 
 
 	/**
+	 * Get world name from world object, using Multiverse alias if available
+	 *
+	 * @param world the world object to retrieve name
+	 * @return bukkit world name or multiverse alias as String
+	 */
+	private String getAliasOrName(final World world)
+	{
+		if (world == null) { return UNKNOWN_WORLD; }
+
+		WorldNameResolver resolver = WorldNameResolver.get(plugin.getServer().getPluginManager());
+
+		return resolver.resolve(world);
+	}
+
+
+	/**
 	 * Get world name from world name string, using Multiverse alias if available
 	 *
 	 * @param worldName the bukkit world name as string
