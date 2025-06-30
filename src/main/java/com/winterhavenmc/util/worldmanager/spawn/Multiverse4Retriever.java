@@ -25,22 +25,22 @@ import java.util.Optional;
 
 public class Multiverse4Retriever implements SpawnLocationRetriever
 {
-	private final MultiverseCore multiverseCore;
+	private final MultiverseCore plugin;
 
 
-	public Multiverse4Retriever(MultiverseCore multiverseCore)
+	public Multiverse4Retriever(MultiverseCore plugin)
 	{
-		this.multiverseCore = multiverseCore;
+		this.plugin = plugin;
 	}
 
 
 	public Optional<Location> getSpawnLocation(final World world)
 	{
-		if (multiverseCore != null
-			&& multiverseCore.getMVWorldManager() != null
-			&& multiverseCore.getMVWorldManager().getMVWorld(world) != null)
+		if (plugin != null
+			&& plugin.getMVWorldManager() != null
+			&& plugin.getMVWorldManager().getMVWorld(world) != null)
 		{
-			return Optional.ofNullable(multiverseCore.getMVWorldManager().getMVWorld(world).getSpawnLocation());
+			return Optional.ofNullable(plugin.getMVWorldManager().getMVWorld(world).getSpawnLocation());
 		}
 		else {
 			return Optional.empty();
