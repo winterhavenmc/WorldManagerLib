@@ -17,13 +17,23 @@
 
 package com.winterhavenmc.util.worldmanager.spawn;
 
+import com.onarandombox.MultiverseCore.MultiverseCore;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mvplugins.multiverse.core.MultiverseCoreApi;
+import org.mvplugins.multiverse.core.world.MultiverseWorld;
+import org.mvplugins.multiverse.core.world.WorldManager;
+import org.mvplugins.multiverse.external.vavr.control.Option;
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 
@@ -32,19 +42,116 @@ class Multiverse5RetrieverTest
 {
 	@Mock World worldMock;
 	@Mock Location locationMock;
+	@Mock MultiverseCoreApi multiverseCoreApiMock;
+	@Mock WorldManager worldManagerMock;
+	@Mock MultiverseWorld multiverseWorldMock;
 
 
 	@Test
-	void getSpawnLocation()
+	void getSpawnLocation_returns_empty_optional_when_MultiverseApi_fails()
 	{
-		// Arrange
-		when(worldMock.getSpawnLocation()).thenReturn(locationMock);
-
 		// Act
 		Multiverse5Retriever retriever = new Multiverse5Retriever();
+		Optional<Location> result = retriever.getSpawnLocation(worldMock);
 
 		// Assert
-		retriever.getSpawnLocation(worldMock);
+		assertEquals(Optional.empty(), result);
+	}
+
+	@Test
+	void getSpawnLocation_returns_empty_optional_when_WorldManager_is_null()
+	{
+		// Arrange
+		try (MockedStatic<MultiverseCoreApi> mocked = mockStatic(MultiverseCoreApi.class)) {
+			mocked.when(MultiverseCoreApi::get).thenReturn(multiverseCoreApiMock);
+
+			when(multiverseCoreApiMock.getWorldManager()).thenReturn(null);
+
+			// Act
+			Multiverse5Retriever retriever = new Multiverse5Retriever();
+			Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+			// Assert
+			assertEquals(Optional.empty(), result);
+		}
+	}
+
+	@Test
+	void getSpawnLocation_returns_empty_optional_when_Option_world_is_empty()
+	{
+		// Arrange
+		try (MockedStatic<MultiverseCoreApi> mocked = mockStatic(MultiverseCoreApi.class)) {
+			mocked.when(MultiverseCoreApi::get).thenReturn(multiverseCoreApiMock);
+
+			when(multiverseCoreApiMock.getWorldManager()).thenReturn(worldManagerMock);
+			when(worldManagerMock.getWorld(worldMock)).thenReturn(Option.none());
+
+			// Act
+			Multiverse5Retriever retriever = new Multiverse5Retriever();
+			Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+			// Assert
+			assertEquals(Optional.empty(), result);
+		}
+	}
+
+	@Test
+	void getSpawnLocation_returns_empty_optional_when_Option_world_is_null()
+	{
+		// Arrange
+		try (MockedStatic<MultiverseCoreApi> mocked = mockStatic(MultiverseCoreApi.class)) {
+			mocked.when(MultiverseCoreApi::get).thenReturn(multiverseCoreApiMock);
+
+			when(multiverseCoreApiMock.getWorldManager()).thenReturn(worldManagerMock);
+			when(worldManagerMock.getWorld(worldMock)).thenReturn(Option.of(multiverseWorldMock));
+
+			// Act
+			Multiverse5Retriever retriever = new Multiverse5Retriever();
+			Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+			// Assert
+			assertEquals(Optional.empty(), result);
+		}
+	}
+
+	@Test
+	void getSpawnLocation_returns_empty_optional_when_MultiverseWorld_getSpawn_location_is_null()
+	{
+		// Arrange
+		try (MockedStatic<MultiverseCoreApi> mocked = mockStatic(MultiverseCoreApi.class)) {
+			mocked.when(MultiverseCoreApi::get).thenReturn(multiverseCoreApiMock);
+
+			when(multiverseCoreApiMock.getWorldManager()).thenReturn(worldManagerMock);
+			when(worldManagerMock.getWorld(worldMock)).thenReturn(Option.of(multiverseWorldMock));
+			when(multiverseWorldMock.getSpawnLocation()).thenReturn(null);
+
+			// Act
+			Multiverse5Retriever retriever = new Multiverse5Retriever();
+			Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+			// Assert
+			assertEquals(Optional.empty(), result);
+		}
+	}
+
+	@Test
+	void getSpawnLocation_returns_optional_location()
+	{
+		// Arrange
+		try (MockedStatic<MultiverseCoreApi> mocked = mockStatic(MultiverseCoreApi.class)) {
+			mocked.when(MultiverseCoreApi::get).thenReturn(multiverseCoreApiMock);
+
+			when(multiverseCoreApiMock.getWorldManager()).thenReturn(worldManagerMock);
+			when(worldManagerMock.getWorld(worldMock)).thenReturn(Option.of(multiverseWorldMock));
+			when(multiverseWorldMock.getSpawnLocation()).thenReturn(locationMock);
+
+			// Act
+			Multiverse5Retriever retriever = new Multiverse5Retriever();
+			Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+			// Assert
+			assertEquals(Optional.of(locationMock), result);
+		}
 	}
 
 }

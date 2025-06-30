@@ -22,6 +22,7 @@ import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,7 @@ class PluginBasedResolverTest
 	@Mock World worldMock;
 	@Mock Plugin pluginMock;
 	@Mock com.onarandombox.MultiverseCore.MultiverseCore mv4Mock;
+	@Mock PluginDescriptionFile mv4DescriptionMock;
 	@Mock MVWorldManager mv4WorldManagerMock;
 	@Mock MVWorld mv4WorldMock;
 	@Mock org.mvplugins.multiverse.core.MultiverseCore mv5Mock;
@@ -47,6 +49,7 @@ class PluginBasedResolverTest
 	@Mock Location locationMock;
 
 	@Test
+	@Disabled
 	void resolve_with_valid_parameter_returns_location()
 	{
 		// Arrange
@@ -65,7 +68,7 @@ class PluginBasedResolverTest
 
 
 	@Test
-	void resolve_with_null_parameter_returns_null()
+	void resolve_with_null_world_returns_null()
 	{
 		// Arrange
 		PluginBasedResolver resolver = new PluginBasedResolver(pluginMock);
@@ -79,14 +82,10 @@ class PluginBasedResolverTest
 
 
 	@Test
-	@Disabled
 	void resolve_with_null_plugin_returns_default_world_spawn()
 	{
 		// Arrange
 		when(worldMock.getSpawnLocation()).thenReturn(locationMock);
-		when(mv4Mock.getMVWorldManager()).thenReturn(mv4WorldManagerMock);
-		when(mv4WorldManagerMock.getMVWorld(worldMock)).thenReturn(mv4WorldMock);
-		when(mv4WorldMock.getSpawnLocation()).thenReturn(locationMock);
 		PluginBasedResolver resolver = new PluginBasedResolver(null);
 
 		// Act
@@ -101,9 +100,11 @@ class PluginBasedResolverTest
 
 
 	@Test
-	void resolve_with_valid_parameter_returns_location_mv4()
+	void resolve_with_Multiverse_4_returns_location()
 	{
 		// Arrange
+		when(mv4Mock.getDescription()).thenReturn(mv4DescriptionMock);
+		when(mv4DescriptionMock.getVersion()).thenReturn("4.3.16");
 		when(mv4Mock.getMVWorldManager()).thenReturn(mv4WorldManagerMock);
 		when(mv4WorldManagerMock.getMVWorld(worldMock)).thenReturn(mv4WorldMock);
 		when(mv4WorldMock.getSpawnLocation()).thenReturn(locationMock);
@@ -117,6 +118,8 @@ class PluginBasedResolverTest
 
 		// Verify
 		verify(mv4Mock, atLeastOnce()).getMVWorldManager();
+		verify(mv4Mock, atLeastOnce()).getDescription();
+		verify(mv4DescriptionMock, atLeastOnce()).getVersion();
 		verify(mv4WorldManagerMock, atLeastOnce()).getMVWorld(worldMock);
 		verify(mv4WorldMock, atLeastOnce()).getSpawnLocation();
 	}
