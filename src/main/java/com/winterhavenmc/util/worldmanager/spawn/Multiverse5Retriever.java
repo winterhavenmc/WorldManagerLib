@@ -21,44 +21,49 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.mvplugins.multiverse.core.MultiverseCoreApi;
 import org.mvplugins.multiverse.core.world.MultiverseWorld;
+import org.mvplugins.multiverse.core.world.WorldManager;
+import org.mvplugins.multiverse.external.vavr.control.Option;
+
+import java.util.Optional;
+import java.util.logging.Logger;
 
 
 public class Multiverse5Retriever implements SpawnLocationRetriever
 {
 	@Override
-	public Location getSpawnLocation(World world)
+	public Optional<Location> getSpawnLocation(World world)
 	{
-		if (world == null) { return null; }
-
-		Location result = null;
-		MultiverseCoreApi multiverseCoreApi = null;
-		boolean success;
+		MultiverseCoreApi multiverseCoreApi;
 
 		try
 		{
 			multiverseCoreApi = MultiverseCoreApi.get();
-			success = true;
 		}
-		catch (Exception exception)
+		catch (IllegalStateException e)
 		{
-			result = world.getSpawnLocation();
-			success = false;
+			Logger.getLogger(this.getClass().getName()).warning( "Multiverse threw an exception while trying to get an instance of its api.");
+			return Optional.empty();
 		}
 
-		if (success)
+		WorldManager worldManager = multiverseCoreApi.getWorldManager();
+
+		if (worldManager == null)
 		{
-			MultiverseWorld multiverseWorld = multiverseCoreApi.getWorldManager().getWorld(world).getOrNull();
-			if (multiverseWorld != null)
-			{
-				result = multiverseCoreApi.getWorldManager().getWorld(world).getOrNull().getSpawnLocation();
-			}
-			else
-			{
-				result = world.getSpawnLocation();
-			}
+			return Optional.empty();
 		}
 
-		return result;
+		Option<MultiverseWorld> optionWorld = worldManager.getWorld(world);
+
+		if (optionWorld.isEmpty())
+		{
+			return Optional.empty();
+		}
+
+		MultiverseWorld multiverseWorld = optionWorld.getOrNull();
+
+		return (multiverseWorld != null)
+				? Optional.ofNullable(multiverseWorld.getSpawnLocation())
+				: Optional.empty();
 	}
 
 }
