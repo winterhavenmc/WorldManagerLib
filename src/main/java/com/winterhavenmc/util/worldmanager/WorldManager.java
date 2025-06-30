@@ -222,16 +222,6 @@ public final class WorldManager
 	}
 
 
-	private String getAliasOrName(final World world)
-	{
-		if (world == null) { return UNKNOWN_WORLD; }
-
-		WorldNameResolver resolver = WorldNameResolver.get(plugin.getServer().getPluginManager());
-
-		return resolver.resolve(world);
-	}
-
-
 	/**
 	 * Get world name from world object, using Multiverse alias if available
 	 *
@@ -306,18 +296,6 @@ public final class WorldManager
 	boolean contains(final UUID uuid)
 	{
 		return this.enabledWorldRegistry.contains(uuid);
-	}
-
-
-	/**
-	 * get List of String of world names of the worlds with uuids in the registry
-	 *
-	 * @return List of String of names of all worlds whose uuids are present in the registry
-	 */
-	@Contract(pure = true)
-	List<String> peek()
-	{
-		return this.enabledWorldRegistry.stream().map(UUID::toString).toList();
 	}
 
 }
