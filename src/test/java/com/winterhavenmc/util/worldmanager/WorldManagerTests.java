@@ -359,7 +359,7 @@ public class WorldManagerTests
 		@Test
 		void getSpawnLocationTest_by_world_null()
 		{
-			assertNull(worldManager.getSpawnLocation((World) null));
+			assertNull(worldManager.getSpawnLocation(null));
 		}
 	}
 
