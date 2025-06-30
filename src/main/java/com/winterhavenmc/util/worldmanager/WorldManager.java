@@ -17,6 +17,7 @@
 
 package com.winterhavenmc.util.worldmanager;
 
+import com.winterhavenmc.util.worldmanager.spawn.SpawnLocationResolver;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -415,9 +416,8 @@ public final class WorldManager
 	 */
 	public Location getSpawnLocation(final World world)
 	{
-		return (world != null)
-				? world.getSpawnLocation()
-				: null;
+		SpawnLocationResolver resolver = SpawnLocationResolver.get(plugin.getServer().getPluginManager());
+		return resolver.resolve(world);
 	}
 
 
