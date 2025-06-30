@@ -1,10 +1,6 @@
 name: Codacy Coverage
 
-on:
-  push:
-    branches:
-      - main
-      - develop
+on: ["push"]
 
 permissions: read-all
 
