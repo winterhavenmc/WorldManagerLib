@@ -21,6 +21,8 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.Optional;
+
 public class Multiverse4Retriever implements SpawnLocationRetriever
 {
 	private final MultiverseCore multiverseCore;
@@ -32,7 +34,7 @@ public class Multiverse4Retriever implements SpawnLocationRetriever
 	}
 
 
-	public Location getSpawnLocation(final World world)
+	public Optional<Location> getSpawnLocation(final World world)
 	{
 		return multiverseCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
 	}
