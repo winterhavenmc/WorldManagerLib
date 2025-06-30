@@ -36,7 +36,15 @@ public class Multiverse4Retriever implements SpawnLocationRetriever
 
 	public Optional<Location> getSpawnLocation(final World world)
 	{
-		return multiverseCore.getMVWorldManager().getMVWorld(world).getSpawnLocation();
+		if (multiverseCore != null
+			&& multiverseCore.getMVWorldManager() != null
+			&& multiverseCore.getMVWorldManager().getMVWorld(world) != null)
+		{
+			return Optional.ofNullable(multiverseCore.getMVWorldManager().getMVWorld(world).getSpawnLocation());
+		}
+		else {
+			return Optional.empty();
+		}
 	}
 
 }
