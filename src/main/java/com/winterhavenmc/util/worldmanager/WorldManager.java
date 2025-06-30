@@ -18,18 +18,12 @@
 package com.winterhavenmc.util.worldmanager;
 
 import com.winterhavenmc.util.worldmanager.spawn.SpawnLocationResolver;
+import com.winterhavenmc.util.worldmanager.worldname.WorldNameResolver;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.generator.WorldInfo;
 import org.bukkit.plugin.Plugin;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-
-import org.mvplugins.multiverse.core.MultiverseCoreApi;
-import org.mvplugins.multiverse.core.world.MultiverseWorld;
 import org.jetbrains.annotations.Contract;
 
 import java.util.*;
@@ -228,67 +222,13 @@ public final class WorldManager
 	}
 
 
-	/**
-	 * Get world name from world UID. If a Multiverse alias exists for the world, it will be returned;
-	 * otherwise the bukkit world name will be returned
-	 *
-	 * @param worldUID the unique ID of a bukkit world
-	 * @return String containing Multiverse world alias or bukkit world name
-	 */
-	public String getWorldName(final UUID worldUID)
-	{
-		// worldUID must be non-null
-		if (worldUID == null)
-		{
-			return UNKNOWN_WORLD;
-		}
-
-		World world = plugin.getServer().getWorld(worldUID);
-
-		return (world != null)
-				? getAliasOrName(world)
-				: UNKNOWN_WORLD;
-	}
-
-
 	private String getAliasOrName(final World world)
 	{
 		if (world == null) { return UNKNOWN_WORLD; }
 
-		MultiverseCoreApi coreApi;
-		String worldName = world.getName();
+		WorldNameResolver resolver = WorldNameResolver.get(plugin.getServer().getPluginManager());
 
-		try
-		{
-			coreApi = MultiverseCoreApi.get();
-		}
-		catch (IllegalStateException exception)
-		{
-			coreApi = null;
-		}
-
-		// try to get multiverse v5 alias or name
-		if (coreApi != null)
-		{
-			MultiverseWorld mvWorld = coreApi.getWorldManager().getWorld(world).getOrNull();
-			if (mvWorld != null && mvWorld.getAliasOrName() != null && !mvWorld.getAliasOrName().isEmpty())
-			{
-				worldName = mvWorld.getAliasOrName();
-			}
-		}
-		// else try to get multiverse v4 alias
-		else
-		{
-			MultiverseCore mvCore = (MultiverseCore) plugin.getServer().getPluginManager().getPlugin("Multiverse-core");
-
-			if (mvCore != null && mvCore.getMVWorldManager() != null)
-			{
-				var mvWorld = mvCore.getMVWorldManager().getMVWorld(world);
-				worldName = mvWorld.getAlias();
-			}
-		}
-
-		return worldName;
+		return resolver.resolve(world);
 	}
 
 
@@ -301,8 +241,6 @@ public final class WorldManager
 	 */
 	public String getWorldName(final World world)
 	{
-		if (world == null) { return UNKNOWN_WORLD; }
-
 		return getAliasOrName(world);
 	}
 
@@ -327,81 +265,6 @@ public final class WorldManager
 		if (world == null)
 		{
 			return UNKNOWN_WORLD;
-		}
-
-		return getAliasOrName(world);
-	}
-
-
-	/**
-	 * Get world name for command sender's world, using Multiverse alias if available
-	 *
-	 * @param sender the command sender used to retrieve world name
-	 * @return bukkit world name or multiverse alias as String
-	 * @throws NullPointerException if passed sender is null
-	 */
-	public String getWorldName(final CommandSender sender)
-	{
-		if (sender == null)
-		{
-			throw new IllegalArgumentException("The argument passed is null; a valid CommandSender is required.");
-		}
-
-		// if server has no worlds, return UNKNOWN_WORLD as world name
-		if (plugin.getServer().getWorlds().isEmpty())
-		{
-			plugin.getLogger().warning("The server has no enabled worlds.");
-			return UNKNOWN_WORLD;
-		}
-
-		// get first server world
-		World world = plugin.getServer().getWorlds().getFirst();
-
-		if (sender instanceof Entity)
-		{
-			world = ((Entity) sender).getWorld();
-		}
-		else if (sender instanceof ConsoleCommandSender)
-		{
-			return UNKNOWN_WORLD;
-		}
-
-		return getAliasOrName(world);
-	}
-
-
-	/**
-	 * Get world name for location, using Multiverse alias if available
-	 *
-	 * @param location the location used to retrieve world name
-	 * @return bukkit world name or multiverse alias as String
-	 * @throws NullPointerException if passed location is null
-	 */
-	public String getWorldName(final Location location)
-	{
-		if (location == null)
-		{
-			return UNKNOWN_WORLD;
-		}
-
-		World world = location.getWorld();
-
-		// if world is null, attempt to retrieve first world from server
-		if (world == null)
-		{
-			if (plugin.getServer().getWorlds().isEmpty())
-			{
-				throw new IllegalStateException("the server has no worlds!");
-			}
-			else
-			{
-				world = plugin.getServer().getWorlds().getFirst();
-			}
-
-			if (world == null)
-			{
-				throw new IllegalStateException("the server returned a null world!");
-			}
 		}
 
 		return getAliasOrName(world);
