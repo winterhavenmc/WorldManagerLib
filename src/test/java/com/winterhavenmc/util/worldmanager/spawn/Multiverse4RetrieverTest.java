@@ -19,31 +19,102 @@ package com.winterhavenmc.util.worldmanager.spawn;
 
 import com.onarandombox.MultiverseCore.MVWorld;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
 class Multiverse4RetrieverTest
 {
-	@Mock com.onarandombox.MultiverseCore.MultiverseCore mv4;
+	@Mock com.onarandombox.MultiverseCore.MultiverseCore mv4PluginMock;
 	@Mock World worldMock;
-	@Mock MVWorldManager MVWorldManagerMock;
-	@Mock MVWorld MVWorldMock;
+	@Mock Location locationMock;
+	@Mock MVWorldManager mv4WorldManagerMock;
+	@Mock MVWorld mv4WorldMock;
+
 
 	@Test
-	void getSpawnLocation()
+	void getSpawnLocation_with_valid_parameters_returns_optional_location()
 	{
-		Multiverse4Retriever retriever = new Multiverse4Retriever(mv4);
-		when(mv4.getMVWorldManager()).thenReturn(MVWorldManagerMock);
-		when(MVWorldManagerMock.getMVWorld(worldMock)).thenReturn(MVWorldMock);
+		// Arrange
+		Multiverse4Retriever retriever = new Multiverse4Retriever(mv4PluginMock);
+		when(mv4PluginMock.getMVWorldManager()).thenReturn(mv4WorldManagerMock);
+		when(mv4WorldManagerMock.getMVWorld(worldMock)).thenReturn(mv4WorldMock);
+		when(mv4WorldMock.getSpawnLocation()).thenReturn(locationMock);
 
-		retriever.getSpawnLocation(worldMock);
+		// Act
+		Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+		// Assert
+		assertTrue(result.isPresent());
+		assertInstanceOf(Location.class, result.get());
+
+		// Verify
+		verify(mv4PluginMock, atLeastOnce()).getMVWorldManager();
+		verify(mv4WorldManagerMock, atLeastOnce()).getMVWorld((worldMock));
+		verify(mv4WorldMock, atLeastOnce()).getSpawnLocation();
+	}
+
+
+	@Test
+	void getSpawnLocation_with_null_api_returns_empty_optional()
+	{
+		// Arrange
+		Multiverse4Retriever retriever = new Multiverse4Retriever(null);
+
+		// Act
+		Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+		// Assert
+		assertTrue(result.isEmpty());
+	}
+
+
+	@Test
+	void getSpawnLocation_with_null_world_manager_returns_empty_optional()
+	{
+		// Arrange
+		Multiverse4Retriever retriever = new Multiverse4Retriever(mv4PluginMock);
+		when(mv4PluginMock.getMVWorldManager()).thenReturn(null);
+
+		// Act
+		Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+		// Assert
+		assertTrue(result.isEmpty());
+
+		// Verify
+		verify(mv4PluginMock, atLeastOnce()).getMVWorldManager();
+	}
+
+
+	@Test
+	void getSpawnLocation_with_null_multiverse_world_returns_empty_optional()
+	{
+		// Arrange
+		Multiverse4Retriever retriever = new Multiverse4Retriever(mv4PluginMock);
+		when(mv4PluginMock.getMVWorldManager()).thenReturn(mv4WorldManagerMock);
+		when(mv4WorldManagerMock.getMVWorld(worldMock)).thenReturn(null);
+
+		// Act
+		Optional<Location> result = retriever.getSpawnLocation(worldMock);
+
+		// Assert
+		assertTrue(result.isEmpty());
+
+		// Verify
+		verify(mv4PluginMock, atLeastOnce()).getMVWorldManager();
+		verify(mv4WorldManagerMock, atLeastOnce()).getMVWorld((worldMock));
 	}
 
 }
