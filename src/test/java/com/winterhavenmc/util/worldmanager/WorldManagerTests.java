@@ -122,21 +122,28 @@ public class WorldManagerTests
 			@Test
 			@DisplayName("get world name by string")
 			void getWorldNameTest_by_string () {
-				assertEquals("world", worldManager.getWorldName("world"));
+				assertEquals("world", worldManager.getAliasOrName("world"));
 			}
 
 
 			@Test
 			@DisplayName("get world name by null string")
 			void getWorldNameTest_by_string_null () {
-				assertEquals(UNKNOWN_WORLD, worldManager.getWorldName((String) null));
+				assertEquals(UNKNOWN_WORLD, worldManager.getAliasOrName((String) null));
 			}
 
 
 			@Test
 			@DisplayName("get world name by empty string")
 			void getWorldNameTest_by_string_empty () {
-				assertEquals(UNKNOWN_WORLD, worldManager.getWorldName(""));
+				assertEquals(UNKNOWN_WORLD, worldManager.getAliasOrName(""));
+			}
+
+			@Test
+			@DisplayName("get world name by string")
+			void getWorldNameTest_by_string_non_existent_world ()
+			{
+				assertEquals("\uD83C\uDF10", worldManager.getAliasOrName("invalid_world_name"));
 			}
 		}
 
