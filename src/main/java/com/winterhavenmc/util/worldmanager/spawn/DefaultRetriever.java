@@ -20,14 +20,16 @@ package com.winterhavenmc.util.worldmanager.spawn;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.Optional;
+
 
 public class DefaultRetriever implements SpawnLocationRetriever
 {
-	public Location getSpawnLocation(final World world)
+	public Optional<Location> getSpawnLocation(final World world)
 	{
 		return (world != null)
-				? world.getSpawnLocation()
-				: null;
+				? Optional.of(world.getSpawnLocation())
+				: Optional.empty();
 	}
 
 }
