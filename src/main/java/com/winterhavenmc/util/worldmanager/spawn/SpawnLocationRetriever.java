@@ -20,8 +20,10 @@ package com.winterhavenmc.util.worldmanager.spawn;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.Optional;
+
 
 public interface SpawnLocationRetriever
 {
-	Location getSpawnLocation(World world);
+	Optional<Location> getSpawnLocation(World world);
 }
