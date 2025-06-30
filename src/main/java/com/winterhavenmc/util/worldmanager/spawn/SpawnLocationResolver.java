@@ -30,6 +30,8 @@ public sealed interface SpawnLocationResolver permits DefaultResolver, PluginBas
 
 	static SpawnLocationResolver get(final PluginManager pluginManager)
 	{
+		if (pluginManager == null) { return new DefaultResolver(); }
+
 		Plugin plugin = pluginManager.getPlugin("Multiverse-Core");
 
 		return (plugin != null && plugin.isEnabled())
