@@ -24,6 +24,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -43,10 +45,10 @@ class DefaultRetrieverTest
 		SpawnLocationRetriever defaultRetriever = new DefaultRetriever();
 
 		// Act
-		Location result = defaultRetriever.getSpawnLocation(worldMock);
+		Optional<Location> result = defaultRetriever.getSpawnLocation(worldMock);
 
 		// Assert
-		assertEquals(locationMock, result);
+		assertEquals(Optional.of(locationMock), result);
 	}
 
 
@@ -57,10 +59,10 @@ class DefaultRetrieverTest
 		SpawnLocationRetriever defaultRetriever = new DefaultRetriever();
 
 		// Act
-		Location result = defaultRetriever.getSpawnLocation(null);
+		Optional<Location> result = defaultRetriever.getSpawnLocation(null);
 
 		// Assert
-		assertNull(result);
+		assertTrue(result.isEmpty());
 	}
 
 }
