@@ -3,6 +3,12 @@
 [![Spigot Version](https://badgen.net/static/spigot-api/1.21.7?color=yellow)](https://spigotmc.org)
 &nbsp;[![License](https://badgen.net/static/license/GPLv3)](https://www.gnu.org/licenses/gpl-3.0)
 
+## This repository has been archived.
+
+The functionality of this library has been incorporated into
+[MessageBuilderLib](http://github.com/winterhavenmc/MessageBuilderLib).
+
+
 # WorldManagerLib
 
 **WorldManagerLib** is a lightweight utility library for Bukkit plugin developers. It enables plugin functionality to be selectively enabled or disabled on a per-world basis using simple configuration settings. It also provides utilities for world name resolution and spawn location handling, with support for [Multiverse-Core](https://mvplugins.org).
